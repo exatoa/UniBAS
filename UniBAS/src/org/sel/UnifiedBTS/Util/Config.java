@@ -26,7 +26,7 @@ public class Config {
 
 	//[DB]
 	public String DB_TYPE = "MSSQL";
-	public String DB_URL = "zeus.sigse.org";//"zeus.sigse.org";
+	public String DB_URL = "zeus.sigse.org";
 	public String DB_PORT = "1433";
 	public String DB_ID = "BugManager";
 	public String DB_PW = "smartBug@1";
@@ -34,7 +34,7 @@ public class Config {
 	public String DB_PREFIX = "Bug";
 
 	//[Common]
-	public String LOG_PATH = "E:\\_Temp\\BTS\\_temp\\";
+	public String LOG_PATH = "E:\\_Research\\2014_UniBAS\\_temp\\";
 	public String NAME = "Mozilla";
 	public String TYPE = "Bugzilla";
 	public String DESC = "";
@@ -50,7 +50,7 @@ public class Config {
 	public int DOWN_SPEED = 40;		//분당 다운로드 속도 40개
 	public int CACHE_LEVEL = 2;		//캐쉬 디렉토리 깊이
 	public int CHCHE_NAMESIZE = 2;	//캐쉬 디렉토리 이름길이.
-	public String CACHE_PATH = "E:\\_Temp\\BTS\\cache2\\";
+	public String CACHE_PATH = "E:\\_Research\\2014_UniBAS\\_cache\\";
 	
 	//[Migration]
 	//public String NAME = "Mozilla";		// in Common
@@ -168,7 +168,7 @@ public class Config {
 
 			//[DB]
 			ini.add("DB", "DB_TYPE", "MSSQL");			
-			ini.add("DB", "DB_URL", "210.125.146.156");// "zeus.sigse.org");			
+			ini.add("DB", "DB_URL", "zeus.sigse.org");			
 			ini.add("DB", "DB_PORT", "1433");			
 			ini.add("DB", "DB_ID", "BugManager");				
 			ini.add("DB", "DB_PW", "smartBug@1");				
@@ -176,7 +176,7 @@ public class Config {
 			ini.add("DB", "DB_PREFIX", "Bug");	
 						
 			//[Common]
-			ini.add("SETTING", "LOG_PATH", "E:\\_Temp\\BTS\\_temp\\");
+			ini.add("SETTING", "LOG_PATH", "E:\\_Research\\2014_UniBAS\\_temp\\");
 			ini.add("SITE", "NAME", "Mozilla");			
 			ini.add("SITE", "TYPE", "Bugzilla");			
 			ini.add("SITE", "DESC", "");			
@@ -187,7 +187,7 @@ public class Config {
 			ini.add("SITE", "BASE_URL", "http://bugzilla.mozilla.org/");	
 			ini.add("SITE", "USER_ID", "forglee@naver.com");			
 			ini.add("SITE", "USER_PW", "Sel535447");					
-			ini.add("SETTING", "CACHE_PATH", "E:\\_Temp\\BTS\\cache2\\");	
+			ini.add("SETTING", "CACHE_PATH", "E:\\_Research\\2014_UniBAS\\_cache\\");	
 			ini.add("SETTING", "WAIT_MINUTE", 5);	
 			ini.add("SETTING", "LIMIT_COUNT", 1000);	
 			ini.add("SETTING", "DOWN_SPEED", 40);	

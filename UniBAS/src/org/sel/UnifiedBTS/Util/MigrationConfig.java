@@ -29,11 +29,11 @@ public class MigrationConfig {
 	public String 	TYPE 		= "Bugzilla";
 
 	//[SETTING]
-	public String LOG_PATH = "E:\\_Temp\\BTS\\_temp\\";
+	public String LOG_PATH = "E:\\_Research\\2014_UniBAS\\_temp\\";
 	
 	//[DB]
 	public String DB_TYPE = "MSSQL";
-	public String DB_URL = "210.125.146.156";//"zeus.sigse.org";
+	public String DB_URL = "zeus.sigse.org";
 	//public String DB_URL = "localhost";
 	public String DB_PORT = "1433";
 	public String DB_ID = "BugManager";
@@ -120,10 +120,10 @@ public class MigrationConfig {
 			ini.add("SITE", "SCHEMA", 		"Analysis_Dupe");
 			ini.add("SITE", "TYPE", 		"Bugzilla");
 												
-			ini.add("SETTING", "LOG_PATH", "E:\\_Temp\\BTS\\_temp\\");		
+			ini.add("SETTING", "LOG_PATH", "E:\\_Research\\2014_UniBAS\\_temp\\");		
 
 			ini.add("DB", "DB_TYPE", "MSSQL");			
-			ini.add("DB", "DB_URL", "210.125.146.156");// "zeus.sigse.org");			
+			ini.add("DB", "DB_URL", "zeus.sigse.org");		
 			ini.add("DB", "DB_PORT", "1433");			
 			ini.add("DB", "DB_ID", "BugManager");				
 			ini.add("DB", "DB_PW", "smartBug@1");				

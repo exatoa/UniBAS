@@ -129,11 +129,11 @@ public class AnalysisConfig extends Config{
 			ini.add("SITE", "END_DATE", 	"");
 			ini.add("SITE", "CONDITION",	"");
 												
-			ini.add("SETTING", "LOG_PATH", "E:\\_Temp\\BTS\\_temp\\");		
+			ini.add("SETTING", "LOG_PATH", "E:\\_Research\\2014_UniBAS\\_temp\\");		
 			
 			
 			ini.add("DB", "DB_TYPE", "MSSQL");			
-			ini.add("DB", "DB_URL", "210.125.146.156");// "zeus.sigse.org");			
+			ini.add("DB", "DB_URL", "zeus.sigse.org");			
 			ini.add("DB", "DB_PORT", "1433");			
 			ini.add("DB", "DB_ID", "BugManager");				
 			ini.add("DB", "DB_PW", "smartBug@1");				
