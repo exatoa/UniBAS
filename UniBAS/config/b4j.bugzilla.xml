@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bugzilla-session class="b4j.core.session.BugzillaHttpSession">
+   <bugzilla-home>https://bugzilla.mozilla.org/</bugzilla-home>
+   <AuthorizationCallback>
+      <login>forglee@naver.com</login>
+      <password>Sel535447</password>
+   </AuthorizationCallback>
+   <Issue class="b4j.core.DefaultIssue"></Issue>
+</bugzilla-session>

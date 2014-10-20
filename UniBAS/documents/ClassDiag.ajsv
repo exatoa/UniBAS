@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2014-4월-30 02:32" filterScript="" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" version="1.7.16.v20130804-1241">
+        <class className="org.sel.UnifiedBTS.Core.CommonAdapter" project="UnifiedBTS" xLocation="1154" yLocation="127"/>
+        <class className="org.sel.UnifiedBTS.Core.SiteInfo" project="UnifiedBTS" xLocation="1620" yLocation="151"/>
+        <class className="org.sel.UnifiedBTS.Core.Controller" project="UnifiedBTS" xLocation="1214" yLocation="866"/>
+        <class className="org.sel.UnifiedBTS.Core.DBManager" project="UnifiedBTS" xLocation="625" yLocation="375"/>
+        <class className="org.sel.UnifiedBTS.Core.DBType" project="UnifiedBTS" xLocation="729" yLocation="100"/>
+        <class className="org.sel.UnifiedBTS.Core.DownloadFile" project="UnifiedBTS" xLocation="2351" yLocation="909"/>
+        <class className="org.sel.UnifiedBTS.Core.MssqlDBManager" project="UnifiedBTS" xLocation="106" yLocation="398"/>
+        <class className="org.sel.UnifiedBTS.Core.MysqlDBManager" project="UnifiedBTS" xLocation="100" yLocation="684"/>
+        <class className="org.sel.UnifiedBTS.Core.ContentTypeExtended" project="UnifiedBTS" xLocation="2132" yLocation="179"/>
+        <class className="org.sel.UnifiedBTS.Core.WebFile" project="UnifiedBTS" xLocation="1856" yLocation="663"/>
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaController" project="UnifiedBTS" xLocation="776" yLocation="1703"/>
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaDBAdapter" project="UnifiedBTS" xLocation="112" yLocation="1500"/>
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaParser" project="UnifiedBTS" xLocation="247" yLocation="2142"/>
+        <class className="org.sel.UnifiedBTS.Mantis.MantisController" project="UnifiedBTS" xLocation="1588" yLocation="1357"/>
+        <class className="org.sel.UnifiedBTS.Mantis.MantisDBAdapter" project="UnifiedBTS" xLocation="1468" yLocation="2556"/>
+        <class className="org.sel.UnifiedBTS.Mantis.MantisParser" project="UnifiedBTS" xLocation="2211" yLocation="2789"/>
+    </diagram>
+</ajsv>

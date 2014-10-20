@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2014-4월-18 10:59" filterScript="" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" version="1.7.16.v20130804-1241">
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaController" project="UnifiedBTS" xLocation="445" yLocation="919"/>
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaDBAdapter" project="UnifiedBTS" xLocation="961" yLocation="462"/>
+        <class className="org.sel.UnifiedBTS.Bugzilla.BugzillaParser" project="UnifiedBTS" xLocation="937" yLocation="1233"/>
+        <class className="org.sel.UnifiedBTS.Core.Controller" project="UnifiedBTS" xLocation="433" yLocation="641"/>
+    </diagram>
+</ajsv>

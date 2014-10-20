@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)--><ajsv>
+    <diagram creationDate="2014-5월-02 12:17" filterScript="" licenseGrade="evaluation" licenseeName="anon" licenseeOrganization="unknown" version="1.7.16.v20130804-1241">
+        <class className="org.sel.UnifiedBTS.Core.CommonAdapter" project="UnifiedBTS" xLocation="958" yLocation="557"/>
+        <class className="org.sel.UnifiedBTS.Core.SiteInfo" project="UnifiedBTS" xLocation="1744" yLocation="313"/>
+        <class className="org.sel.UnifiedBTS.Core.Controller" project="UnifiedBTS" xLocation="909" yLocation="1181"/>
+        <class className="org.sel.UnifiedBTS.Core.DBManager" project="UnifiedBTS" xLocation="310" yLocation="480"/>
+        <class className="org.sel.UnifiedBTS.Core.DBType" project="UnifiedBTS" xLocation="175" yLocation="1265"/>
+        <class className="org.sel.UnifiedBTS.Core.DownloadFile" project="UnifiedBTS" xLocation="2986" yLocation="1176"/>
+        <class className="org.sel.UnifiedBTS.Core.MssqlDBManager" project="UnifiedBTS" xLocation="626" yLocation="107"/>
+        <class className="org.sel.UnifiedBTS.Core.MysqlDBManager" project="UnifiedBTS" xLocation="129" yLocation="116"/>
+        <class className="org.sel.UnifiedBTS.Core.ContentTypeExtended" project="UnifiedBTS" xLocation="2867" yLocation="790"/>
+        <class className="org.sel.UnifiedBTS.Core.WebFile" project="UnifiedBTS" xLocation="1899" yLocation="935"/>
+    </diagram>
+</ajsv>
