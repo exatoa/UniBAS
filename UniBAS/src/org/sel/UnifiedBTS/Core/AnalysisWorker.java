@@ -200,38 +200,38 @@ public class AnalysisWorker {
 		//스키마 코드 아직 분리 안됨...
 		
 		//2. 실행프로그램 실행
-		log.info("NLP : Python 프로그램을 실행 시켜주세요.");
-//		
-//		String cmd[] = {"python", 
-//				 "D:\\_Zeck\\_Projects\\PyCharm\\UniBAS\\Main.py",
-//				 "-d",
-//				 "Analysis_firefox1",
-//				 "-s",
-//				 "7",
-//				 "-m",
-//				 "1",
-//				 "-w",
-//				 "\"b s\""
-//				 };
-//		
-//		ProcessLauncher launcher = new ProcessLauncher(cmd);
-//		OutputListener  listener = new OutputListener()
-//		{
-//			@Override
-//			public void standardOutput(char[] output) {
-//				System.out.print(output);
-//				System.out.flush();
-//			}
-//		
-//			@Override
-//			public void errorOutput(char[] output) {
-//				System.out.print(output);
-//				System.out.flush();
-//			}
-//		};
-//		launcher.addOutputListener(listener);
-//		
-//		launcher.launch();
+		log.info("NLP : Python 프로그램이 실행중입니다. 기다려 주세요....");
+		
+		String cmd[] = {"python", 
+				 "D:\\_Zeck\\_Projects\\PyCharm\\UniBAS\\Main.py",
+				 "-d",
+				 Setting.NAME,
+				 "-s",
+				 "7",
+				 "-m",
+				 "1",
+				 "-w",
+				 "\"b s\""
+				 };
+		
+		ProcessLauncher launcher = new ProcessLauncher(cmd);
+		OutputListener  listener = new OutputListener()
+		{
+			@Override
+			public void standardOutput(char[] output) {
+				System.out.print(output);
+				System.out.flush();
+			}
+		
+			@Override
+			public void errorOutput(char[] output) {
+				System.out.print(output);
+				System.out.flush();
+			}
+		};
+		launcher.addOutputListener(listener);
+		
+		launcher.launch();
 	}
 	
 }
