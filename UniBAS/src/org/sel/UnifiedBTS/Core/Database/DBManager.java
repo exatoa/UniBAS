@@ -181,6 +181,15 @@ public abstract class DBManager {
 	 */
 	public abstract int createDB(String _dbname);
 	
+	
+	/**
+	 * 해당 이름의 데이터 베이스 삭제
+	 * @return 1이면 정상적으로 삭제, 0이면 실패.
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
+	public abstract int dropDB(String _dbname);
+	
 	/**
 	 * 데이터베이스를 변경함
 	 * @param _dbname

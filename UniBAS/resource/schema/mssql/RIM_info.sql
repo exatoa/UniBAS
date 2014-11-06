@@ -357,6 +357,17 @@ BEGIN
 	DECLARE @ret			AS INTEGER
 
 	SELECT @schema_name = [schema_name]  from [site] where id = @site_id
+
+	SET @sql = N'ALTER DATABASE '+@schema_name + N' SET SINGLE_USER WITH ROLLBACK IMMEDIATE'
+	EXEC @ret = sp_executesql @sql, @params, @resCnt OUTPUT
+
+	IF @ret <> 0	--sp_executesql은 리턴이 0이면 정상실행 아니면 에러.
+	BEGIN
+		PRINT 'ERROR_CODE = ' + cast(@ret as nvarchar(128))
+		RETURN -1
+	END
+
+
 	SET @sql = N'drop database  ' + @schema_name 
 	EXEC @ret = sp_executesql @sql, @params, @resCnt OUTPUT
 

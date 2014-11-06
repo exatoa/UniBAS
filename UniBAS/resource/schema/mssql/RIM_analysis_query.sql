@@ -83,91 +83,6 @@ BEGIN
 	RETURN
 END;;
 
--------------------------------------------------------
--- stopword를 보충
--------------------------------------------------------
-CREATE PROCEDURE makeStopword
-(
-	 @mode_id integer
-	,@site_id integer
-	,@initSize integer	= null	--초기의 stopword size
-)
-AS
-BEGIN
-	IF @initSize is null SET @initSize = 0
-
-	--stopword초기화
-	DECLARE @minID as integer
-	SELECT @minID = min(id) + @initSize from stopword where mode_id =@mode_id
-	DELETE FROM stopword where mode_id =@mode_id and id>=@minID
-
-
-	--상한선 하한선 을 구함.
-	DECLARE @lLimit as DECIMAL(10,5) = 3.0
-	DECLARE @rLimit as DECIMAL(10,5)
-	SELECT @rLimit = (max(value) / 10.0) FROM (
-		--IDF의 분포를 보여줌.
-		SELECT
-			 DISTINCT value
-		from (SELECT term_id, cast((value*10) as integer) as value FROM getIDF(@mode_id, @site_id) ) a
-		group by value
-	) t
-
-	INSERT INTO stopword
-	SELECT @mode_id, value from (
-		--stopword로 포함시킬 어휘들.
-		SELECT value FROM TERM T
-		WHERE mode_id = @mode_id and
-		id in (SELECT term_id FROM getIDF(@mode_id,@site_id) where value < @lLimit or value >= @rLimit)
-		union
-		SELECT value FROM TERM 
-		WHERE MODE_ID = @mode_id					--작업하는 모드
-		and ( len(value) <=@mode_id 
-			OR VALUE like '[0-9]%' 
-			OR charindex('_', value) > 0)			--포함시키고 싶은 단어들
-		and value not in ('qa', 'ui','ip')			--예외로 주고싶은 단어들
-		union SELECT '...'
-		union select value from term where value like '[_][_]%' and mode_id = @mode_id
-	)t
-	WHERE value not in (SELECT name FROM stopword WHERE mode_id = @mode_id)
-END;;
-
--------------------------------------------------------
--- stopword에 해당하는 값을 표시
--------------------------------------------------------
-CREATE PROCEDURE setStopwords
-(
-	@mode_id	as BIT
-)
-AS
-BEGIN
-
-	IF @mode_id is null and @mode_id <0 RETURN -1
-
-	--모든 값을 초기화
-	UPDATE	et
-	SET		stopword = 0
-	FROM	element_term et 
-	WHERE	mode_id = @mode_id
-
-
-	--Stopword가 맞는 값에 대해서 1로 적용
-	UPDATE	et
-	SET		et.stopword = 1
-	--SELECT mode_id, site_id, term_id, stopword 
-	FROM	element_term et 
-	WHERE	mode_id = @mode_id
-	AND		term_id in (
-		--불용어인 term_id
-		SELECT	 t.id
-		FROM	term t
-		WHERE	t.mode_id = @mode_id
-		AND		t.value in (SELECT name FROM stopword WHERE mode_id = @mode_id)
-	)
-END;;
-
-
-
 ------------------------------------------------------
 --   버그리포트 관계에서 특정 일자 범위내에서 중복이 발생되엇는지 확인.
 ------------------------------------------------------
@@ -1210,4 +1125,41 @@ BEGIN
 
 	--PRINT @unique / @total
 	RETURN @unique / @total
+END;;
+
+
+---------------------------------------------------------
+--버그리포트들의 용어 크기에 관한 정보를 반환
+---------------------------------------------------------
+CREATE PROCEDURE getReports_Terminfo
+(
+	 @siteID	integer
+	,@modeID	integer
+	,@unique	BIT = 0
+)
+AS
+BEGIN
+	--이미 필터링 되어있어서 범위 필요없음.
+	--and creation_ts >= '2004-01-01' and creation_ts < '2004-01-10'
+	--
+	IF @unique = 0 
+	BEGIN
+		SELECT id, summary, [description], creation_ts, volume
+		FROM bug  b
+		join (
+			select bug_id, count(term_id) as volume from element_term where mode_id = @modeID and site_id = @siteID
+			group by bug_id
+		) t on b.id = t.bug_id
+		WHERE site_id = @siteID
+	END
+	ELSE
+	BEGIN
+		SELECT id, summary, [description], creation_ts, volume
+		FROM bug  b
+		join (
+			select bug_id, count(distinct term_id) as volume from element_term where mode_id = @modeID and site_id = @siteID
+			group by bug_id
+		) t on b.id = t.bug_id
+		WHERE site_id = @siteID
+	END
 END;;

@@ -79,7 +79,7 @@ public class AnalysisCreate
 
 		AnalysisWorker main = new AnalysisWorker(config);
 		main.run();
-		
+
 		
 		
 		//마무리 정리.

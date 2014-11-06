@@ -33,6 +33,13 @@ public class MysqlDBManager extends DBManager {
 
 
 	@Override
+	public int dropDB(String _dbname) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
 	public String changeDB(String _dbname) {
 		// TODO Auto-generated method stub
 		return null;
@@ -79,5 +86,6 @@ public class MysqlDBManager extends DBManager {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 }

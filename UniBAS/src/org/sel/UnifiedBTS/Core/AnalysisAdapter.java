@@ -102,7 +102,7 @@ public class AnalysisAdapter {
 			file.close();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	    
@@ -117,7 +117,7 @@ public class AnalysisAdapter {
 			file.close();
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	    

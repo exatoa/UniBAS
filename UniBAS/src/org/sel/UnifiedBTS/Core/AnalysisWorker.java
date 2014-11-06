@@ -141,8 +141,15 @@ public class AnalysisWorker {
 		}
 		catch (ControllException e) {
 			log.error("Working Error : "+ e.getMessage());
-			log.printStackTrace(e);
+			//log.printStackTrace(e);
 			retFlag = false;
+		}
+		finally
+		{
+			log.error("Removing Working data....");
+			int ret = DB.dropDB(Setting.NAME);
+			if (ret==1)	log.error("Done");
+			else		log.error("Failed! Sorry, Please Remove" + Setting.NAME);
 		}
 		
 		return retFlag;

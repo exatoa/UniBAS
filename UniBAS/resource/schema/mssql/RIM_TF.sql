@@ -63,6 +63,7 @@ CREATE TABLE tf_mode
 	 id				INT				IDENTITY(1,1)	not null
 	,[token_type]	NVARCHAR(64)					not null
 	,[stem_type]	NVARCHAR(64)					not null
+	,[description]  NVARCHAR(512)
 	primary key(id)
 );;
 
@@ -119,17 +120,25 @@ CREATE NONCLUSTERED INDEX element_term_mode_bug_id		ON element_term(mode_id, sit
 ----------------------------------------------------------------------
 CREATE PROCEDURE addMode
 (
-	 @token_type		NVARCHAR(32)
+	 @id				Integer = Null
+	,@token_type		NVARCHAR(32)
 	,@stem_type			NVARCHAR(32)
+	,@description		NVARCHAR(512) = ''
 )
 AS
 BEGIN
-	DECLARE @id as integer
-	SELECT @id = id from tf_mode Where token_type = @token_type and stem_type = @stem_type 
 	IF @id is not null
-		RETURN @id
+	BEGIN	
+		IF EXISTS (SELECT id from tf_mode Where id = @id and token_type = @token_type and stem_type = @stem_type)
+		begin
+			SELECT @id as ID
+			RETURN @id
+		end
+	end
 	
-	INSERT INTO tf_mode VALUES (@token_type, @stem_type)
+
+	INSERT INTO tf_mode VALUES (@token_type, @stem_type, @description)
+	SELECT @@IDENTITY as ID
 	RETURN @@IDENTITY
 END;;
 
@@ -343,25 +352,88 @@ GROUP BY e.mode_id, e.stopword, t.value
 ;;
 
 
------------------------------------------
-----Term 테이블의 값을 업데이트. (최종적으로 호출)
------------------------------------------
---CREATE PROCEDURE updateTermTable
---(
---	@mode_id integer
---)
---AS 
---BEGIN
---	UPDATE term
---	SET frequency = T.frequency
---	FROM 
---	term
---	JOIN 
---	(
---	SELECT 
---		term_id
---		,count(term_id)	AS frequency 
---	FROM element_term
---	Where mode_id = @mode_id
---	GROUP BY term_id) T on term.mode_id = @mode_id and id = T.term_id
---END;;
+
+
+-------------------------------------------------------
+-- stopword를 보충
+-------------------------------------------------------
+CREATE PROCEDURE makeStopword
+(
+	 @siteID	as Integer
+	,@modeID	as Integer
+	,@initSize integer	= null	--초기의 stopword size
+)
+AS
+BEGIN
+	IF @initSize is null SET @initSize = 0
+
+	--stopword초기화
+	DECLARE @minID as integer
+	SELECT @minID = min(id) + @initSize from stopword where mode_id =@modeID
+	DELETE FROM stopword where mode_id =@modeID and id>=@minID
+
+
+	--상한선 하한선 을 구함.
+	DECLARE @lLimit as DECIMAL(10,5) = 3.0
+	DECLARE @rLimit as DECIMAL(10,5)
+	SELECT @rLimit = (max(value) / 10.0) FROM (
+		--IDF의 분포를 보여줌.
+		SELECT
+			 DISTINCT value
+		from (SELECT term_id, cast((value*10) as integer) as value FROM getIDF(@modeID, @siteID) ) a
+		group by value
+	) t
+
+	INSERT INTO stopword
+	SELECT @modeID, value from (
+		--stopword로 포함시킬 어휘들.
+		SELECT value FROM TERM T
+		WHERE mode_id = @modeID and
+		id in (SELECT term_id FROM getIDF(@modeID,@siteID) where value < @lLimit or value >= @rLimit)
+		union
+		SELECT value FROM TERM 
+		WHERE MODE_ID = @modeID					--작업하는 모드
+		and ( len(value) <=@modeID 
+			OR VALUE like '[0-9]%' 
+			OR charindex('_', value) > 0)			--포함시키고 싶은 단어들
+		and value not in ('qa', 'ui','ip')			--예외로 주고싶은 단어들
+		union SELECT '...'
+		union select value from term where value like '[_][_]%' and mode_id = @modeID
+	)t
+	WHERE value not in (SELECT name FROM stopword WHERE mode_id = @modeID)
+END;;
+
+-------------------------------------------------------
+-- stopword에 해당하는 값을 표시
+-------------------------------------------------------
+CREATE PROCEDURE setStopwords
+(
+	 @siteID	as Integer
+	,@modeID	as Integer
+)
+AS
+BEGIN
+
+	IF @siteID is null and @modeID <0 RETURN -1
+
+	--모든 값을 초기화
+	UPDATE	et
+	SET		stopword = 0
+	FROM	element_term et 
+	WHERE	mode_id = @modeID
+
+
+	--Stopword가 맞는 값에 대해서 1로 적용
+	UPDATE	et
+	SET		et.stopword = 1
+	--SELECT mode_id, site_id, term_id, stopword 
+	FROM	element_term et 
+	WHERE	site_id = @siteID and mode_id = @modeID
+	AND		term_id in (
+		--불용어인 term_id
+		SELECT	 t.id
+		FROM	term t
+		WHERE	t.mode_id = @modeID
+		AND		t.value in (SELECT name FROM stopword WHERE mode_id = @modeID)
+	)
+END;;

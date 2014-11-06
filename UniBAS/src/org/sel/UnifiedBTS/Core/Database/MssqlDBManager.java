@@ -67,6 +67,48 @@ public class MssqlDBManager extends DBManager {
 	}
 	
 	/**
+	 * 해당 이름의 데이터 베이스 삭제
+	 * @return 1이면 정상적으로 삭제, 0이면 실패.
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
+	@Override
+	public synchronized int dropDB(String _dbname)
+	{
+		int ret = 1;
+		String sql = "USE MASTER "
+					+"\nIF EXISTS (SELECT * FROM sys.databases WHERE name = '" + _dbname +"')"
+				    +"\nBEGIN"
+					+"\n   ALTER DATABASE " + _dbname + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE"
+					+"\n   DROP DATABASE " +_dbname
+					+"\nEND";
+							
+		Statement  stmt = null;
+		try{
+			stmt = Conn.createStatement();
+			stmt.executeUpdate(sql);
+		}
+		catch (SQLException e){
+			if (e.getErrorCode()==1801)  //이미 DB가 있는경우.
+			{
+				ret = 2;
+			}
+			else
+				ret = 0;
+
+		}finally{
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				ret = 0;
+				//log.printStackTrace(e);
+			}
+		}
+		
+		return ret;
+	}
+	
+	/**
 	 * 데이터베이스를 변경함
 	 * @param _dbname
 	 * @return 변경전의 DB명을 반환.
@@ -132,8 +174,8 @@ public class MssqlDBManager extends DBManager {
         	if(e.getErrorCode()==2714)
         		ret=0;
         	else{
-        		log.print(_script);
-            	log.printStackTrace(e);
+        		log.error("Follow Code has error : " + e.getMessage()+ "\n" +_script);
+            	//log.printStackTrace(e);
             	ret= -1;
         	}
             

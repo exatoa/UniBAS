@@ -566,6 +566,58 @@ END;;
 
 
 
+------------------------------------------------------------------------------
+-- 분석 데이터베이스 삭제
+------------------------------------------------------------------------------
+CREATE PROCEDURE deleteAnalysis
+(
+	 @analysis_id	as integer
+)
+AS
+BEGIN
+	IF @analysis_id is null RETURN -1
+
+	IF not exists (select * from [analysis] where id = @analysis_id)
+	BEGIN
+		PRINT 'No Analysis ID'
+		RETURN -1
+	END
+	
+	--analysis 데이터베이스 삭제--------------------------------------------------------
+	DECLARE @resCnt			AS INTEGER
+	DECLARE @sql			AS NVARCHAR(MAX)
+	DECLARE @params			AS NVARCHAR(256) = '@resCnt as int OUTPUT'	--OUTPUT에 주의
+	DECLARE @schema_name	AS NVARCHAR(128)
+	DECLARE @ret			AS INTEGER
+	SELECT @schema_name = [schema_name]  from [analysis] where id = @analysis_id
+
+
+	------   단일사용자 모드로 변경 후 ---------------	
+	SET @sql = N'ALTER DATABASE '+ @schema_name +' SET  SINGLE_USER WITH ROLLBACK IMMEDIATE'
+	EXEC @ret = sp_executesql @sql, @params, @resCnt OUTPUT
+	IF @ret <> 0	--sp_executesql은 리턴이 0이면 정상실행 아니면 에러.
+	BEGIN
+		PRINT 'ERROR_CODE = ' + cast(@ret as nvarchar(128))
+		RETURN -1
+	END
+
+	------  DB 삭제 ---------------
+	SET @sql = N'drop database  ' + @schema_name 
+	EXEC @ret = sp_executesql @sql, @params, @resCnt OUTPUT
+
+	IF @ret <> 0	--sp_executesql은 리턴이 0이면 정상실행 아니면 에러.
+	BEGIN
+		PRINT 'ERROR_CODE = ' + cast(@ret as nvarchar(128))
+		RETURN -1
+	END
+
+	-- 부가 정보 삭제---------------------------------------------------------	
+	delete from [analysis_history] where analysis_id = @analysis_id	
+	delete from [analysis_project] where analysis_id = @analysis_id
+	delete from [analysis] where id = @analysis_id
+END;;
+
+
 -----------------------------------------------
 ---- 프로젝트의 아이디 목록 구하기
 -----------------------------------------------
