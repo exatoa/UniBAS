@@ -45,7 +45,7 @@ public abstract class Controller {
 			
 				
 			if(common.createCommonDB(commonDBname)==null){		//시스템 초기화 (Common DB생성)
-				throw new ControllException("Common DB initial error!!!");
+				throw new ControllException(1, "Common DB initial error!!!");
 			}
 			log.info( "Common DB initialized!!");
 			
@@ -59,7 +59,7 @@ public abstract class Controller {
 			SiteID =common.saveSiteInfo(info);
 			if(SiteID<0)
 			{
-				throw new ControllException("Invalidate system type!!");
+				throw new ControllException(1, "Invalidate system type!!");
 			}
 			else
 				log.info("Saved the target information \""+Setting.NAME+"\"");		
@@ -69,7 +69,7 @@ public abstract class Controller {
 			//3. 대상 DB생성.======================================================
 			targetDBname = common.createTargetDB(targetDBname, Setting.TYPE);	//시스템 초기화.
 			if(targetDBname==null){
-				throw new ControllException("target DB create error!!");
+				throw new ControllException(1, "target DB create error!!");
 			}
 			log.info("Target DB \""+targetDBname+"\" initialized!");
 			
@@ -77,7 +77,7 @@ public abstract class Controller {
 		
 			//4. 대상 DB로 작업상태 전환.
 			if(DB.changeDB(targetDBname)==null){
-				throw new ControllException("Change targetDB Error \""+targetDBname+"\"");
+				throw new ControllException(1, "Change targetDB Error \""+targetDBname+"\"");
 			}
 			
 
@@ -89,17 +89,17 @@ public abstract class Controller {
 			
 			//6. DB변경
 			if(DB.changeDB(commonDBname)==null){
-				throw new ControllException("Change commonDB Error \""+commonDBname+"\"");
+				throw new ControllException(1, "Change commonDB Error \""+commonDBname+"\"");
 			}
 			
 			//7. 정보저장
 			if(common.updateSiteInfo(info.Name, resMsg)== false) {
-				throw new ControllException("SiteInfo update error!");
+				throw new ControllException(1, "SiteInfo update error!");
 			}
 						
 			//8. 실패시 처리.
 			if (retFlag==false)
-				throw new ControllException(resMsg);
+				throw new ControllException(1, resMsg);
 		}
 		catch(SQLConnectionException e)
 		{

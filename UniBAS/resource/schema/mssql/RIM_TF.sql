@@ -371,6 +371,7 @@ BEGIN
 	DECLARE @minID as integer
 	SELECT @minID = min(id) + @initSize from stopword where mode_id =@modeID
 	DELETE FROM stopword where mode_id =@modeID and id>=@minID
+	DBCC CHECKIDENT('stopword', RESEED, @minID)
 
 
 	--상한선 하한선 을 구함.
@@ -401,6 +402,8 @@ BEGIN
 		union select value from term where value like '[_][_]%' and mode_id = @modeID
 	)t
 	WHERE value not in (SELECT name FROM stopword WHERE mode_id = @modeID)
+
+	SELECT 1 as result
 END;;
 
 -------------------------------------------------------
@@ -436,4 +439,6 @@ BEGIN
 		WHERE	t.mode_id = @modeID
 		AND		t.value in (SELECT name FROM stopword WHERE mode_id = @modeID)
 	)
+
+	SELECT 1 as result
 END;;

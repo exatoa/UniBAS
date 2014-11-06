@@ -1,10 +1,20 @@
 package org.sel.UnifiedBTS.Core;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import org.sel.UnifiedBTS.Core.Database.DBManager;
 import org.sel.UnifiedBTS.Core.Database.SQLConnectionException;
 import org.sel.UnifiedBTS.Exception.ControllException;
 import org.sel.UnifiedBTS.Util.Config;
+import org.sel.UnifiedBTS.Util.ProcessLauncher;
 import org.sel.UnifiedBTS.Util.log;
+import org.sel.UnifiedBTS.Util.ProcessLauncher.OutputListener;
 
 public class AnalysisWorker {
 
@@ -44,26 +54,27 @@ public class AnalysisWorker {
 			
 			//mssql_analysis.sql 외부 파일을 실행.  (분석모델 생성에 필요한 도구)
 			if(Adapter.createAnalysisFoundation(Setting.DB_TYPE)==false){
-				throw new ControllException("mssql_analysis_create.sql 생성 실패");
+				throw new ControllException(0, "mssql_analysis_create.sql 생성 실패");
 			}
 			log.info("분석모델 생성에 필요한 도구 생성 성공");
 	
+
+			//2.분석정보 생성=======================================================
+			AnalysisID = Adapter.saveAnalysisInfo(Setting.NAME, Setting.DESC, Setting.NAME, Setting.IS_UNIFORMLY, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
+			if (AnalysisID <=0){
+				throw new ControllException(1, "analysis 정보등록 실패 : "+Setting.NAME);
+			}
+			log.info("AnalysisID : "+AnalysisID);
 			
-			//2.분석 DB 생성=======================================================
+			
+			//3.분석 DB 생성=======================================================
 			//mssql_unified.sql 외부 파일을 실행.  (분석모델 담겨있음.)
 			//mssql_unified_TF.sql 외부 파일을 실행.  (TF모델 담겨있음.)
 			if(Adapter.createAnalysisDB(Setting.NAME, Setting.DB_TYPE)==null){
-				throw new ControllException("analysis DB 생성 실패 : "+Setting.NAME);
+				throw new ControllException(2, "analysis DB 생성 실패 : " + Setting.NAME);
 			}
 			log.info("analysis DB 생성 성공 : "+Setting.NAME);
 			
-			
-			//3.분석정보 생성=======================================================
-			AnalysisID = Adapter.saveAnalysisInfo(Setting.NAME, Setting.DESC, Setting.NAME, Setting.IS_UNIFORMLY, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
-			if (AnalysisID <=0){
-				throw new ControllException("analysis 정보등록 실패 : "+Setting.NAME);
-			}
-			log.info("AnalysisID : "+AnalysisID);
 					
 			
 			//이미 이동된 데이터인지 검토
@@ -73,7 +84,7 @@ public class AnalysisWorker {
 			log.info("데이터 이동 시작 : "+AnalysisID);
 			int ret = Adapter.moveAnalysis(Setting.NAME, Setting.SITE_ID, Setting.PROJECT_ID, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
 			if (ret <=0){
-				throw new ControllException("데이터 이동 실패 : "+Setting.NAME);
+				throw new ControllException(3, "데이터 이동 실패 : "+Setting.NAME);
 			}
 			log.info("데이터 이동 완료 : "+AnalysisID);
 		
@@ -82,7 +93,7 @@ public class AnalysisWorker {
 			log.info("요약 정보 생성 시작 : "+AnalysisID);
 			ret = Adapter.makeAnalysisSummary(AnalysisID, Setting.NAME, Setting.SITE_ID, Setting.PROJECT_ID);
 			if (ret <=0){
-				throw new ControllException("요약 정보 생성 실패 : "+AnalysisID);
+				throw new ControllException(4, "요약 정보 생성 실패 : "+AnalysisID);
 			}
 			log.info("요약 정보 생성 완료 : "+AnalysisID);
 	
@@ -127,10 +138,9 @@ public class AnalysisWorker {
 			DB.changeDB(Setting.DB_BASEDB);
 			log.info("Change DB : "+ Setting.DB_BASEDB);
 			
-			//7. NLP 처리 프로세스 가동.
-			//TODO : 파이썬 프로그램 실행.
-			log.info("NLP : Python 프로그램을 실행 시켜주세요.");
-	
+			//7. 확장 기능들 실행.
+			ExecExtentions();
+			
 			log.info("Analysis Create Done : "+ Setting.NAME);
 		}
 		catch(SQLConnectionException e)
@@ -142,17 +152,86 @@ public class AnalysisWorker {
 		catch (ControllException e) {
 			log.error("Working Error : "+ e.getMessage());
 			//log.printStackTrace(e);
+			if (e.ErrorCode > 1){
+				log.error("Removing Working data....");
+				int ret = DB.dropDB(Setting.NAME);
+				if (ret==1)	log.error("Done");
+				else		log.error("Failed! Sorry, Please Remove" + Setting.NAME);
+			}
 			retFlag = false;
-		}
-		finally
-		{
-			log.error("Removing Working data....");
-			int ret = DB.dropDB(Setting.NAME);
-			if (ret==1)	log.error("Done");
-			else		log.error("Failed! Sorry, Please Remove" + Setting.NAME);
 		}
 		
 		return retFlag;
+	}
+	
+	/**
+	 * 선택된 플러그인들을 실행시켜줌
+	 */
+	public void ExecExtentions()
+	{
+		List<Integer> idList = getExtentions();
+		
+		for(int i=0; i<idList.size(); i++)
+		{
+			ProcessExtention(idList.get(i));
+		}
+	}
+	
+	/**
+	 * 사용하기로 선택한 플러그인의 아이디들을 가져옴.
+	 * @return
+	 */
+	public List<Integer> getExtentions()
+	{
+		 List<Integer> list = new ArrayList<Integer>();
+		 
+		 list.add(1);//1번이 NLP로 가정.
+		 
+		 return list;
+	}
+
+	/**
+	 * 확장기능을 수행하도록 설정.
+	 * @param extID
+	 */
+	public void ProcessExtention(int extID)
+	{
+		//1. 스키마 생성.
+		//스키마 코드 아직 분리 안됨...
+		
+		//2. 실행프로그램 실행
+		log.info("NLP : Python 프로그램을 실행 시켜주세요.");
+//		
+//		String cmd[] = {"python", 
+//				 "D:\\_Zeck\\_Projects\\PyCharm\\UniBAS\\Main.py",
+//				 "-d",
+//				 "Analysis_firefox1",
+//				 "-s",
+//				 "7",
+//				 "-m",
+//				 "1",
+//				 "-w",
+//				 "\"b s\""
+//				 };
+//		
+//		ProcessLauncher launcher = new ProcessLauncher(cmd);
+//		OutputListener  listener = new OutputListener()
+//		{
+//			@Override
+//			public void standardOutput(char[] output) {
+//				System.out.print(output);
+//				System.out.flush();
+//			}
+//		
+//			@Override
+//			public void errorOutput(char[] output) {
+//				System.out.print(output);
+//				System.out.flush();
+//			}
+//		};
+//		launcher.addOutputListener(listener);
+//		
+//		launcher.launch();
 	}
 	
 }

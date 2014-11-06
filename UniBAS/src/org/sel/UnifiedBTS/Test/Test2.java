@@ -1,11 +1,21 @@
 package org.sel.UnifiedBTS.Test;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import org.sel.UnifiedBTS.Util.ProcessLauncher;
+import org.sel.UnifiedBTS.Util.ProcessLauncher.OutputListener;
 import org.sel.UnifiedBTS.Util.TextUtil;
 import org.sel.UnifiedBTS.Util.XML;
 import org.sel.UnifiedBTS.Util.TermElement;
@@ -27,9 +37,10 @@ public class Test2 {
 	public void run() {
 		//ConvertUrls();
 		//TimeTest();
-		bucketTest();
+		//bucketTest();
 		//XMLTest();
 		//FileTest();
+		cmd_test();
 		
 	}
 	
@@ -143,6 +154,49 @@ public class Test2 {
 		
 	}
 
+	
+	private void cmd_test()
+	{
+        String cmd[] = { "cmd",
+        				 "/c",
+        				 "C:\\Python27\\python.exe", 
+						 "D:\\_Zeck\\_Projects\\PyCharm\\UniBAS\\Main.py",
+						 "-d",
+						 "Analysis_firefox1",
+						 "-s",
+						 "7",
+						 "-m",
+						 "1",
+						 "-w",
+						 "\"b s\""
+						 };
+//		String cmd[] = {"cmd.exe","/c",
+//						 "dir", 
+//						 "/w"
+//						 };
+        
+        ProcessLauncher launcher = new ProcessLauncher(cmd);
+        OutputListener  listener = new OutputListener()
+        {
+
+			@Override
+			public void standardOutput(char[] output) {
+				System.out.print(output);
+				System.out.flush();
+			}
+
+			@Override
+			public void errorOutput(char[] output) {
+				System.out.print(output);
+				System.out.flush();
+			}
+        };
+        launcher.addOutputListener(listener);
+        
+        launcher.launch();
+        
+	}
+	
 
 	
 }
