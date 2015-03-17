@@ -125,7 +125,7 @@ public class AnalysisWorker {
 			DB.changeDB(Setting.NAME);
 			log.info("Change DB : "+ Setting.NAME);
 			
-			//매핑정보 설정
+			//사용자 쿼리 생성
 			Adapter.createAnalysisQueries(Setting.DB_TYPE);
 			log.info("created quries in "+ Setting.NAME);
 				

@@ -8,13 +8,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.sel.UnifiedBTS.Util.LogType;
 import org.sel.UnifiedBTS.Util.TextUtil;
 import org.sel.UnifiedBTS.Util.log;
 

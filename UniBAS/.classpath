@@ -3,12 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resource"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppacheClient"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ini4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Bugzilla_Lib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ApacheClient"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jArgs"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JodaTime"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jSoup"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Bugzilla_Lib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSuop"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/INI4J"/>
+	<classpathentry kind="lib" path="lib/commons-configuration-1.10/commons-configuration-1.10.jar"/>
+	<classpathentry kind="lib" path="lib/b4j-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/baselib-1.2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
