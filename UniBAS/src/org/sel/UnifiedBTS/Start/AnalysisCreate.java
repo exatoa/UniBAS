@@ -152,7 +152,7 @@ public class AnalysisCreate
 		Option optUniformly = new StringOption('u',"isuniformly");
 		Option optStartDate = new StringOption('b', "begindate");
 		Option optEndDate = new StringOption('e', "enddate");
-		Option optCondition = new StringOption('c', "enddate");
+		Option optCondition = new StringOption('c', "condition");
 		
 		
 		

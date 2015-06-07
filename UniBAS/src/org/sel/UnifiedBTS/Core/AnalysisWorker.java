@@ -203,7 +203,7 @@ public class AnalysisWorker {
 		log.info("NLP : Python 프로그램이 실행중입니다. 기다려 주세요....");
 		
 		String cmd[] = {"python", 
-				 "D:\\_Zeck\\_Projects\\PyCharm\\UniBAS\\Main.py",
+				 "D:\\#NLC\\Projects\\PyCharm\\UniBAS\\Main.py",
 				 "-d",
 				 Setting.NAME,
 				 "-s",
