@@ -2,13 +2,13 @@ package org.seal.UniBAS.Core;
 
 import org.seal.UniBAS.Core.Database.DBManager;
 import org.seal.UniBAS.Core.Database.SQLConnectionException;
-import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 
 public class MigrationWorker {
 
 
-	protected Config Setting = null;	//설정값
+	protected Settings Setting = null;	//설정값
 	protected DBManager DB = null;		//사용할 데이터베이스
 	protected MigrationAdapter Adapter = null;
 	
@@ -16,9 +16,9 @@ public class MigrationWorker {
 	protected int SiteID = 0;			//작업중인 Site ID;
 	protected int AnalysisID = 0;		//작업중인 Site ID;
 
-	public MigrationWorker(Config _config)
+	public MigrationWorker(Settings _setting)
 	{	
-		Setting = _config;
+		Setting = _setting;
 		DB = DBManager.getInstance();
 	}
 
@@ -34,9 +34,9 @@ public class MigrationWorker {
 	
 			
 			//사이트 아이디 구하기
-			SiteID = Adapter.getSiteID(Setting.NAME);
+			SiteID = Adapter.getSiteID(Setting.SYS_NAME);
 			if(SiteID<=0){
-				log.error("잘못된 스키마명 : " + Setting.NAME);
+				log.error("잘못된 스키마명 : " + Setting.SYS_NAME);
 				return false;
 			}
 			log.info("SiteID = " + SiteID);
@@ -46,14 +46,14 @@ public class MigrationWorker {
 			log.info("removing old data in site_id=" + SiteID+"...");
 			int ret = Adapter.removeSiteData(SiteID);
 			if(ret<=0){
-				log.error("기존 스키마 데이터 삭제중 에러 : " + Setting.NAME);
+				log.error("기존 스키마 데이터 삭제중 에러 : " + Setting.SYS_NAME);
 				return false;
 			}
 			log.info("Done");
 			
 			
 			//RSM 스키마에서 작업
-			DB.changeDB(Setting.NAME);
+			DB.changeDB(Setting.SYS_NAME);
 			
 
 			//마이그레이션 도구 삭제
@@ -64,7 +64,7 @@ public class MigrationWorker {
 			log.info("기존의 migration_프로시저 삭제 성공");
 						
 			//mssql_bugzilla_migration.sql 외부 파일을 실행.  (마이그레이션에 필요한 도구)
-			if(Adapter.createMigrationFoundation(Setting.DB_BASEDB, Setting.TYPE)==0){
+			if(Adapter.createMigrationFoundation(Setting.DB_BASEDB, Setting.SYS_TYPE)==0){
 				log.error("mssql_bugzilla_migration.sql 생성 실패");
 				return false;
 			}

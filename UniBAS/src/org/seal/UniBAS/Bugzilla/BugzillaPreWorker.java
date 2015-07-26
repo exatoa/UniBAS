@@ -10,8 +10,8 @@ import org.seal.UniBAS.Bugzilla.Model.Vote;
 import org.seal.UniBAS.Core.Controller;
 import org.seal.UniBAS.Core.Database.SQLConnectionException;
 import org.seal.UniBAS.Core.Model.SiteInfo;
-import org.seal.UniBAS.Util.Config;
 import org.seal.UniBAS.Util.SerializedList;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.WorkState;
 import org.seal.UniBAS.Util.log;
 
@@ -33,8 +33,8 @@ public class BugzillaPreWorker extends Controller {
 	// 생성자
 	// ///////////////////////////////////////////////////////////
 
-	public BugzillaPreWorker(Config _config) {
-		super(_config);
+	public BugzillaPreWorker(Settings _setting) {
+		super(_setting);
 	}
 
 	// //////////////////////////////////////////////////
@@ -50,10 +50,10 @@ public class BugzillaPreWorker extends Controller {
 
 		// 필요한 객체들 생성.
 		boolean restartOption = false;
-		BugList = new SerializedList<Integer>(Config.it().LOG_PATH
-				+ "serializedQueue_" + Config.it().NAME + ".txt");
-		State = WorkState.getInstance(Config.it().LOG_PATH + "workstate_"
-				+ Config.it().NAME + ".txt");
+		BugList = new SerializedList<Integer>(Settings.it().LOG_PATH
+				+ "serializedQueue_" + Settings.it().SYS_NAME + ".txt");
+		State = WorkState.getInstance(Settings.it().LOG_PATH + "workstate_"
+				+ Settings.it().SYS_NAME + ".txt");
 
 		// 재시작 검토
 		// State.setCurrentBugID(680678);

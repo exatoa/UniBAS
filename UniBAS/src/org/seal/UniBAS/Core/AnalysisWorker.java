@@ -1,18 +1,12 @@
 package org.seal.UniBAS.Core;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 import org.seal.UniBAS.Core.Database.DBManager;
 import org.seal.UniBAS.Core.Database.SQLConnectionException;
 import org.seal.UniBAS.Core.Exception.ControllException;
-import org.seal.UniBAS.Util.Config;
 import org.seal.UniBAS.Util.ProcessLauncher;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 import org.seal.UniBAS.Util.ProcessLauncher.OutputListener;
 
@@ -24,7 +18,7 @@ public class AnalysisWorker {
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	protected Config Setting = null;	//설정값
+	protected Settings Setting = null;	//설정값
 	protected DBManager DB = null;		//사용할 데이터베이스
 	protected AnalysisAdapter Adapter = null;
 	
@@ -32,9 +26,9 @@ public class AnalysisWorker {
 	protected int SiteID = 0;			//작업중인 Site ID;
 	protected int AnalysisID = 0;		//작업중인 Site ID;
 
-	public AnalysisWorker(Config _config)
+	public AnalysisWorker(Settings _setting)
 	{	
-		Setting = _config;
+		Setting = _setting;
 		DB = DBManager.getInstance();
 	}
 
@@ -60,9 +54,9 @@ public class AnalysisWorker {
 	
 
 			//2.분석정보 생성=======================================================
-			AnalysisID = Adapter.saveAnalysisInfo(Setting.NAME, Setting.DESC, Setting.NAME, Setting.IS_UNIFORMLY, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
+			AnalysisID = Adapter.saveAnalysisInfo(Setting.AS_NAME, Setting.AS_DESC, Setting.AS_NAME, Setting.IS_UNIFORMLY, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
 			if (AnalysisID <=0){
-				throw new ControllException(1, "analysis 정보등록 실패 : "+Setting.NAME);
+				throw new ControllException(1, "analysis 정보등록 실패 : "+Setting.AS_NAME);
 			}
 			log.info("AnalysisID : "+AnalysisID);
 			
@@ -70,10 +64,10 @@ public class AnalysisWorker {
 			//3.분석 DB 생성=======================================================
 			//mssql_unified.sql 외부 파일을 실행.  (분석모델 담겨있음.)
 			//mssql_unified_TF.sql 외부 파일을 실행.  (TF모델 담겨있음.)
-			if(Adapter.createAnalysisDB(Setting.NAME, Setting.DB_TYPE)==null){
-				throw new ControllException(2, "analysis DB 생성 실패 : " + Setting.NAME);
+			if(Adapter.createAnalysisDB(Setting.AS_NAME, Setting.DB_TYPE)==null){
+				throw new ControllException(2, "analysis DB 생성 실패 : " + Setting.AS_NAME);
 			}
-			log.info("analysis DB 생성 성공 : "+Setting.NAME);
+			log.info("analysis DB 생성 성공 : "+Setting.AS_NAME);
 			
 					
 			
@@ -82,16 +76,16 @@ public class AnalysisWorker {
 			
 			//4.데이터 이동 시작 (오래걸림)
 			log.info("데이터 이동 시작 : "+AnalysisID);
-			int ret = Adapter.moveAnalysis(Setting.NAME, Setting.SITE_ID, Setting.PROJECT_ID, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
+			int ret = Adapter.moveAnalysis(Setting.AS_NAME, Setting.SITE_ID, Setting.PROJECT_ID, Setting.START_DATE, Setting.END_DATE, Setting.CONDITION);
 			if (ret <=0){
-				throw new ControllException(3, "데이터 이동 실패 : "+Setting.NAME);
+				throw new ControllException(3, "데이터 이동 실패 : "+Setting.AS_NAME);
 			}
 			log.info("데이터 이동 완료 : "+AnalysisID);
 		
 			
 			//5. 요약정보 생성
 			log.info("요약 정보 생성 시작 : "+AnalysisID);
-			ret = Adapter.makeAnalysisSummary(AnalysisID, Setting.NAME, Setting.SITE_ID, Setting.PROJECT_ID);
+			ret = Adapter.makeAnalysisSummary(AnalysisID, Setting.AS_NAME, Setting.SITE_ID, Setting.PROJECT_ID);
 			if (ret <=0){
 				throw new ControllException(4, "요약 정보 생성 실패 : "+AnalysisID);
 			}
@@ -140,17 +134,17 @@ public class AnalysisWorker {
 			xml_str += "</Map>";
 			
 			//데이터 베이스 변경
-			DB.changeDB(Setting.NAME);
-			log.info("Change DB : "+ Setting.NAME);
+			DB.changeDB(Setting.AS_NAME);
+			log.info("Change DB : "+ Setting.AS_NAME);
 			
 			//사용자 쿼리 생성
 			Adapter.createAnalysisQueries(Setting.DB_TYPE);
-			log.info("created quries in "+ Setting.NAME);
+			log.info("created quries in "+ Setting.AS_NAME);
 				
 			//매핑정보 설정
 			Adapter.initializeFieldMap(Setting.SITE_ID, xml_str);
 			Adapter.initializeFieldType(Setting.SITE_ID);
-			log.info("updated Field Mapping: "+ Setting.NAME);
+			log.info("updated Field Mapping: "+ Setting.AS_NAME);
 			
 			//데이터 베이스 다시 복귀
 			DB.changeDB(Setting.DB_BASEDB);
@@ -159,7 +153,7 @@ public class AnalysisWorker {
 			//7. 확장 기능들 실행.
 			ExecExtentions();
 			
-			log.info("Analysis Create Done : "+ Setting.NAME);
+			log.info("Analysis Create Done : "+ Setting.AS_NAME);
 		}
 		catch(SQLConnectionException e)
 		{
@@ -172,9 +166,9 @@ public class AnalysisWorker {
 			//log.printStackTrace(e);
 			if (e.ErrorCode > 1){
 				log.error("Removing Working data....");
-				int ret = DB.dropDB(Setting.NAME);
+				int ret = DB.dropDB(Setting.AS_NAME);
 				if (ret==1)	log.error("Done");
-				else		log.error("Failed! Sorry, Please Remove" + Setting.NAME);
+				else		log.error("Failed! Sorry, Please Remove" + Setting.AS_NAME);
 			}
 			retFlag = false;
 		}
@@ -223,7 +217,7 @@ public class AnalysisWorker {
 		String cmd[] = {"python", 
 				 "D:\\#NLC\\Projects\\PyCharm\\UniBAS\\Main.py",
 				 "-d",
-				 Setting.NAME,
+				 Setting.AS_NAME,
 				 "-s",
 				 "7",
 				 "-m",

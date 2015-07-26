@@ -5,7 +5,7 @@ import org.seal.UniBAS.Core.Database.SQLConnectionException;
 import org.seal.UniBAS.Core.Model.SiteInfo;
 import org.seal.UniBAS.Core.Network.WebCacheFile;
 import org.seal.UniBAS.Core.Exception.ControllException;
-import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 
 
@@ -19,12 +19,12 @@ import org.seal.UniBAS.Util.log;
  */
 public abstract class Controller {
 
-	protected Config Setting = null;	//설정값
+	protected Settings Setting = null;	//설정값
 	protected DBManager DB = null;		//사용할 데이터베이스
 	protected WebCacheFile Web = null;	//네트워크 연결 객체
 	protected int SiteID = 0;			//작업중인 Site ID;
 	
-	public Controller(Config _config)
+	public Controller(Settings _config)
 	{
 		Setting = _config;
 		
@@ -52,22 +52,22 @@ public abstract class Controller {
 			
 	
 			//2. 대상 정보 저장======================================================
-			String targetDBname = Setting.TYPE +"_" +Setting.NAME;
+			String targetDBname = Setting.SYS_TYPE +"_" +Setting.SYS_NAME;
 			//String unifiedDBname = Setting.DB_PREFIX +"_" +Setting.NAME;
 	
-			SiteInfo info = new SiteInfo(Setting.NAME, targetDBname,Setting.DESC, Setting.TYPE, Setting.BASE_URL, Setting.USER_ID, Setting.USER_PW,  Setting.LOG_PATH,  Setting.CACHE_PATH);
+			SiteInfo info = new SiteInfo(Setting.SYS_NAME, targetDBname,Setting.SYS_DESC, Setting.SYS_TYPE, Setting.SYS_URL, Setting.SYS_ID, Setting.SYS_PW,  Setting.LOG_PATH,  Setting.CACHE_PATH);
 			SiteID =common.saveSiteInfo(info);
 			if(SiteID<0)
 			{
 				throw new ControllException(1, "Invalidate system type!!");
 			}
 			else
-				log.info("Saved the target information \""+Setting.NAME+"\"");		
+				log.info("Saved the target information \""+Setting.SYS_NAME+"\"");		
 	
 			
 			
 			//3. 대상 DB생성.======================================================
-			targetDBname = common.createTargetDB(targetDBname, Setting.TYPE);	//시스템 초기화.
+			targetDBname = common.createTargetDB(targetDBname, Setting.SYS_TYPE);	//시스템 초기화.
 			if(targetDBname==null){
 				throw new ControllException(1, "target DB create error!!");
 			}

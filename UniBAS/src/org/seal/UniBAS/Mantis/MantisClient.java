@@ -1,16 +1,11 @@
 package org.seal.UniBAS.Mantis;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.seal.UniBAS.Bugzilla.BugzillaParser;
 import org.seal.UniBAS.Core.Model.DownloadFile;
 import org.seal.UniBAS.Core.Model.SiteInfo;
 import org.seal.UniBAS.Core.Network.WebCacheFile;
@@ -21,9 +16,7 @@ import org.seal.UniBAS.Mantis.Model.Category;
 import org.seal.UniBAS.Mantis.Model.Project;
 import org.seal.UniBAS.Mantis.Model.PropertyItem;
 import org.seal.UniBAS.Mantis.Model.User;
-import org.seal.UniBAS.Util.Config;
 import org.seal.UniBAS.Util.DateUtil;
-import org.seal.UniBAS.Util.TextUtil;
 import org.seal.UniBAS.Util.log;
 
 public class MantisClient {

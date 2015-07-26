@@ -1,16 +1,14 @@
 package org.seal.UniBAS;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 import org.seal.UniBAS.Core.Model.SiteInfo;
 import org.seal.UniBAS.Core.Network.WebCacheFile;
 import org.seal.UniBAS.Trac.TracClient;
 import org.seal.UniBAS.Trac.Model.BugReport;
-import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 
 public class CheckTrac {
@@ -18,8 +16,26 @@ public class CheckTrac {
 	public static FileWriter writer = null;
 	public static void main(String[] args) {
 		
-		Config config = Config.getInstance();
-		//1. 로그 파일 설정=======================================================
+
+	    //1. 설정 파일 로드.
+		Settings config = Settings.getInstance();
+		if(Settings.Initialized == true) 
+		{
+			System.out.println("Made default Settings to Settings.json file.");
+			System.out.println("Check your folder. And Change your own settings.");
+			return;
+		}
+		else if(config==null)
+		{
+			System.out.println("Error! Setting is invalid");
+			return;
+		}
+		//설정 출력
+		config.printSettings();
+				
+		
+		
+		//2. 로그 파일 설정=======================================================
 		try {
 			log.init(config.LOG_PATH + "log_Trac.txt");
 		} catch (IOException e){ 
@@ -51,7 +67,7 @@ public class CheckTrac {
 		web.setLimitation(config.LIMIT_COUNT, config.WAIT_MINUTE);
 		web.setDownloadSpeed(config.DOWN_SPEED);
 		web.setCacheLevel(config.CACHE_LEVEL);
-		web.setCacheNamesize(config.CHCHE_NAMESIZE);
+		web.setCacheNamesize(config.CACHE_NAMESIZE);
 		
 		
 		

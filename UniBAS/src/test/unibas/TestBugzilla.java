@@ -1,16 +1,12 @@
 package test.unibas;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.seal.UniBAS.Bugzilla.BugzillaParser;
 import org.seal.UniBAS.Bugzilla.Model.BugReport;
 import org.seal.UniBAS.Core.Network.WebCacheFile;
-import org.seal.UniBAS.Core.Network.WebFile;
-import org.seal.UniBAS.Mantis.MantisParser;
-import org.seal.UniBAS.Util.Config;
-import org.seal.UniBAS.Util.TextUtil;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 
 public class TestBugzilla {
@@ -25,7 +21,7 @@ public class TestBugzilla {
 	/**
 	 * 테스트에 필요한 변수들.
 	 */
-	private Config config =null;
+	private Settings config =null;
 	private WebCacheFile Web = null;
 	private BugzillaParser Parser = null;
 	
@@ -54,11 +50,11 @@ public class TestBugzilla {
 	private void SetConfig()
 	{
 		//기본 config생성.
-		config = Config.getInstance();
-		config.NAME = "TestBugzillas_Site";
-		config.BASE_URL = "http://bugzilla.mozilla.org/";
-		config.USER_ID = "forglee@naver.com";
-		config.USER_PW = "Sel535447";
+		config = Settings.getInstance();
+		config.SYS_NAME = "TestBugzillas_Site";
+		config.SYS_URL = "http://bugzilla.mozilla.org/";
+		config.SYS_ID = "forglee@naver.com";
+		config.SYS_PW = "Sel535447";
 	}
 	
 	
@@ -149,7 +145,7 @@ public class TestBugzilla {
 			}
 			
 			//버그리포트 페이지 분석.
-			report = Parser.analysisReport(HttpString, config.USER_ID);	//페이지 결과분석
+			report = Parser.analysisReport(HttpString, config.SYS_ID);	//페이지 결과분석
 			if(report==null){
 				log.error("BugReport analysis Error : " + Url);		//오류 표시하고 다음으로 넘어감.
 				redownload = true;
@@ -184,7 +180,7 @@ public class TestBugzilla {
 	private boolean PrepareTest()
 	{
 		try {
-			log.init(config.LOG_PATH + "log_"+config.NAME+".txt");
+			log.init(config.LOG_PATH + "log_"+config.SYS_NAME+".txt");
 		} catch (IOException e){ 
 			log.printStackTrace(e);
 			return false;
@@ -212,15 +208,15 @@ public class TestBugzilla {
 		//로그인
 		boolean ret =  login();
 		if(ret==false){
-			log.error("Failed to login : \""+ config.USER_ID + "\".");
+			log.error("Failed to login : \""+ config.SYS_ID + "\".");
 			return false;
 		}
-		log.info( config.USER_ID + " signed in");
+		log.info( config.SYS_ID + " signed in");
 		
 		//타임존 변경 (UTC)
 		ret =  setTimezone(null);
 		if(ret==false){
-			log.error("Failed to change timezone : \""+ config.USER_ID + "\".");
+			log.error("Failed to change timezone : \""+ config.SYS_ID + "\".");
 			return false;
 		}
 		log.info( "Changed timezone to UTC");	
@@ -238,13 +234,13 @@ public class TestBugzilla {
 	private String getReportURL(int _id)
 	{
 		String reportURL = "show_bug.cgi?id={0}&ctype=xml";
-		return config.BASE_URL + reportURL.replaceFirst("\\{0\\}", String.valueOf(_id));
+		return config.SYS_URL + reportURL.replaceFirst("\\{0\\}", String.valueOf(_id));
 	}
 	
 	private String getHistoryURL(int _id)
 	{
 		String reportURL = "show_activity.cgi?id={0}";
-		return config.BASE_URL + reportURL.replaceFirst("\\{0\\}", String.valueOf(_id));
+		return config.SYS_URL + reportURL.replaceFirst("\\{0\\}", String.valueOf(_id));
 	}
 
 
@@ -256,7 +252,7 @@ public class TestBugzilla {
 	public boolean login()
 	{
 		//1차 페이지 요청
-		String url = config.BASE_URL + "index.cgi";
+		String url = config.SYS_URL + "index.cgi";
 		String strHttp = Web.getBody(url, true);
 		if(strHttp==null){
 			log.error("Failed to get login page.");
@@ -265,7 +261,7 @@ public class TestBugzilla {
 		//TextUtil.writeTextFile("C:\\_temp\\login_ready.html", strHttp, null);//테스트코드
 		
 		//파라메터 생성
-		Map<String,String> loginParams = Parser.getLoginParams(strHttp, config.USER_ID, config.USER_PW);
+		Map<String,String> loginParams = Parser.getLoginParams(strHttp, config.SYS_ID, config.SYS_PW);
 		Parser.printMap(loginParams);	//테스트코드
 		
 		//2차 로그인
@@ -290,7 +286,7 @@ public class TestBugzilla {
 		
 		
 		//환경설정 페이지 얻기
-		String url = config.BASE_URL + "userprefs.cgi";
+		String url = config.SYS_URL + "userprefs.cgi";
 		boolean ret = false;
 		String strHttp = Web.getBody(url, true);
 		if(strHttp==null){

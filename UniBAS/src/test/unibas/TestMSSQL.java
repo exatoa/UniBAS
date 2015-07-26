@@ -1,6 +1,5 @@
 package test.unibas;
 
-import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,16 +8,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
-
-import org.seal.UniBAS.Bugzilla.BugzillaWorker;
-import org.seal.UniBAS.Core.Controller;
 import org.seal.UniBAS.Core.Database.DBManager;
-import org.seal.UniBAS.Core.Network.WebCacheFile;
-import org.seal.UniBAS.Mantis.MantisWorker;
-import org.seal.UniBAS.Util.Config;
-import org.seal.UniBAS.Util.DateUtil;
-import org.seal.UniBAS.Util.TextUtil;
 import org.seal.UniBAS.Util.log;
 
 public class TestMSSQL {

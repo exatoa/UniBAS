@@ -1,3 +1,7 @@
+#This JSON File follows Hjson Style
+#reference hjson site : www.hjson.org
+#Updated : 2015-07-27
+#
 #configuration for UniBAS and tools
 {
      COMMON:{
@@ -6,7 +10,7 @@
 		,DB_PORT:1433				#DB port
 		,DB_ID:"BugManager"		#DB login id
 		,DB_PW:"smartBug@1"		#DB login password
-		,BASE_DB:"UniBAS"			#DB Database name for management
+		,DB_BASEDB:"UniBAS"			#DB Database name for management
 		,DB_PREFIX:"Bug" 			#prefix for original site database -->
 		
 		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\_temp\\"	# log path		
@@ -21,19 +25,12 @@
 	CRAWLING:{
 	
 		# Target site information(name, description, system type)
-		 NAME:"Mozilla"
-		,DESC:""
-		,TYPE:"Bugzilla"
-		
-		# Target site information		
-		,BASE_URL:"http://bugzilla.mozilla.org/"  # Address
-		,USER_ID:"forglee@naver.com"
-		,USER_PW:"Sel535447"
-		
-		# deprecated, date to gathering data
-		# maybe....end date time is 23:59:59
-		,START_DATE:"2014-01-01"
-		,END_DATE:"2014-01-31"		
+		 SYS_NAME:"Mozilla"
+		,SYS_TYPE:"Bugzilla"
+		,SYS_DESC:""
+		,SYS_URL:"http://bugzilla.mozilla.org/"  # Address
+		,SYS_ID:"forglee@naver.com"
+		,SYS_PW:"Sel535447"
 
 		#crawling speed control		
 		,LIMIT_COUNT:1000		# 연속 다운로드 수 1000
@@ -44,10 +41,10 @@
 	# Settings to extract original source files
 	ANALYSIS:{
 		# Analysis name, it uses also as schema name, don't input space
-		 TITLE:"Analysis_Motivation"	
-		,DESC:""		#description
+		 AS_NAME:"Analysis_Motivation"	
+		,AS_DESC:""		#description
 		
-		# Filter information		
+		# Filter information
 		,SITE_ID:7			# Site IDentify to analyze
 		,PROJECT_ID:"16"	# Project ID to analyze, it can be multiful.
 		,IS_UNIFORMLY:1	# what kind of an option?
@@ -61,15 +58,15 @@
 	EXTRACT:{
 		
 		#input 관련 정보 
-		 INPUT_LIST:"E:\\_Research\\2015_IEICE\\Extract\\list_july.txt"	# Bug ID list
-		,URL_BASE:"https://bugzilla.mozilla.org/"		# 추출할 사이트 
-		,URL_PAGE:"show_bug.cgi?id={0}&ctype=xml"		# 추출할 페이지 {0}은 변수, List의 ID가 입력됨
+		 EX_INPUTS:"E:\\_Research\\2015_IEICE\\Extract\\list_july.txt"	# Bug ID list
+		,EX_SITE:"https://bugzilla.mozilla.org/"		# 추출할 사이트 
+		,EX_PAGE:"show_bug.cgi?id={0}&ctype=xml"		# 추출할 페이지 {0}은 변수, List의 ID가 입력됨
 		#,URL_PAGE:"show_activity.cgi?id={0}"
 		 
 		# output 관련 정보
-		,OUTPUT_PATH:"E:\\_Research\\2015_IEICE\\Extract\\bug_july\\"
-		,OUTPUT_EXT:"xml" 		# 출력결과 파일 확장자
-		,SPLIT_CNT:1000		# 출력파일 폴더링 (ex. 1000 --> 1000개 단위로 폴더링)
+		,EX_OUTPUTPATH:"E:\\_Research\\2015_IEICE\\Extract\\bug_july\\"
+		,EX_EXTNAME:"xml" 		# 출력결과 파일 확장자
+		,EX_SPLIT_CNT:1000		# 출력파일 폴더링 (ex. 1000 --> 1000개 단위로 폴더링)
 								# 0이면 분리 안함
 		
 		# LocalProxyPath is defined CACHE_PATH of COMMON

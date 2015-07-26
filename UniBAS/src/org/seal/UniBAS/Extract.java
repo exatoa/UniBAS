@@ -14,56 +14,57 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.TextUtil;
 import org.seal.UniBAS.Util.log;
 
 class Extract {
-	
-	//Setting 변수들
-	private static String OUTPUT_PATH = "E:\\_Research\\2015_IEICE\\Extract\\bug_july\\";
-	private static String LogPath = "E:\\_Research\\2015_IEICE\\Extract\\log.txt";
-	private static String LocalProxyPath = "E:\\_Research\\2014_UniBAS\\_cache\\";		//실제 파일이 있는 경로
-	
-	
-	//입력파일 설정
-	private static String INPUT_LIST = "E:\\_Research\\2015_IEICE\\Extract\\list_july.txt"; //출력할 파일 목록(버그 아이디리스트)
-	private static int HASH_DEPTH = 2; 	//입력 파일의 hash path Level이 몇 단계로 되어있는지 결정
-	private static int HASH_SIZE = 2; 		//입력 파일의 hash path Level의 길이
-	private String URL_base = "https://bugzilla.mozilla.org/";	//사이트 베이스 URL
-	//private String URL_page = "show_activity.cgi?id={0}";		//원본 사이트 URL
-	private String URL_page = "show_bug.cgi?id={0}&ctype=xml";
-	
-	//출력파일 설정
-	private static int SPLIT_CNT = 1000; //출력 파일을 몇개 단위로 폴더링 할지 결정
-	private static String OUTPUT_EXT = "xml"; //출력파일 확장자
-	
 	/**
 	 * 메인 프로그램
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//1. 로그 파일 설정=======================================================
+
+	    //1. 설정 파일 로드.
+		Settings config = Settings.getInstance();
+		if(Settings.Initialized == true) 
+		{
+			System.out.println("Made default Settings to Settings.json file.");
+			System.out.println("Check your folder. And Change your own settings.");
+			return;
+		}
+		else if(config==null)
+		{
+			System.out.println("Error! Setting is invalid");
+			return;
+		}
+		//설정 출력
+		config.printSettings();
+		
+		
+		//2. 로그 파일 설정=======================================================
 		try {
-			log.init(LogPath);
+			log.init(config.LOG_PATH+"extractor.txt");
 		} catch (IOException e){ 
 			log.printStackTrace(e);
 			return;
 		}
 
 		
-		//2. 원하는 작업 시행
+		//3. 원하는 작업 시행
 		Extract extract  = new Extract();
-		boolean ret= extract.makeXMLwithCount(INPUT_LIST, SPLIT_CNT, HASH_DEPTH,HASH_SIZE, OUTPUT_PATH, OUTPUT_EXT);
+		extract.config = config;
+		boolean ret= extract.makeXMLwithCount();
 		
 	}
-		
 	
-	
-
 
 	/////////////////////////////////////////////////////////////////////////////
 	// 메인 로직 함수들.
 	/////////////////////////////////////////////////////////////////////////////
+	
+	private Settings config = null;
+	
 	/**
 	 * 파일에 있는 리스트에 해당하는 버그아이디들을 출력 패스로 출력.
 	 * @param _listfile
@@ -72,10 +73,10 @@ class Extract {
 	 * @param _outputPath
 	 * @return
 	 */
-	public boolean makeXMLwithCount(String _listfile, int _splitCnt, int _depth, int _size, String _outputPath, String _ext)//Map<Integer,Integer> _map)
+	public boolean makeXMLwithCount()
 	{
 		//작업대상 파일 로드
-		List<Integer> list = loadList(_listfile);
+		List<Integer> list = loadList(config.EX_INPUTS);
 		if(list==null) return false;
 		
 		
@@ -88,7 +89,7 @@ class Extract {
 		
 	
 		//타겟 디렉토리 생성
-		if (createPath(_outputPath + splitID +"\\")==false){
+		if (createPath(config.EX_OUTPUTPATH + splitID +"\\")==false){
 			System.out.println("Output Path Create Error");
 			return false;
 		}
@@ -98,16 +99,16 @@ class Extract {
         while(it.hasNext()){
 
         	//출력결과 저장용 폴더 생성.
-			if (k%_splitCnt==0){
+			if (k%config.EX_SPLIT_CNT==0){
 				if (k==0) 	splitID = 0;
-				else 		splitID += _splitCnt;
+				else 		splitID += config.EX_SPLIT_CNT;
 				
 				//대상 폴더 생성.
-				if (createPath(_outputPath +splitID+"\\")==false){
+				if (createPath(config.EX_OUTPUTPATH +splitID+"\\")==false){
 					System.out.println("Output Path Create Error");
 					return false;
 				}
-				log.info("Create new #"+(k/_splitCnt)+" subfolder : "+ splitID);	
+				log.info("Create new #"+(k/config.EX_SPLIT_CNT)+" subfolder : "+ splitID);	
 			}
         
         	//이동 대상 ID 추출
@@ -115,9 +116,9 @@ class Extract {
             
             
             //소스파일의 실제 경로 추출.
-            src = TextUtil.convertURLtoPath(URL_base + URL_page.replaceFirst("\\{0\\}", Integer.toString(bug_id)));
-            src = TextUtil.makeBucket(src, _size, _depth);
-            src = LocalProxyPath+ src;
+            src = TextUtil.convertURLtoPath(config.EX_SITE + config.EX_PAGE.replaceFirst("\\{0\\}", Integer.toString(bug_id)));
+            src = TextUtil.makeBucket(src, config.CACHE_NAMESIZE, config.CACHE_LEVEL);
+            src = config.CACHE_PATH	+ src;
             
 
 			//파일 존재 확인
@@ -129,7 +130,7 @@ class Extract {
 			}
 			
 			//파일 복사.(카운트별 폴더로 넣음)
-			String out = _outputPath + splitID+"\\"+ bug_id +"."+_ext;	//복사대상
+			String out = config.EX_OUTPUTPATH + splitID+"\\"+ bug_id + "." + config.EX_EXTNAME;	//복사대상
 			fileCopy(src, out);											//파일복사
 			
 			
@@ -151,52 +152,6 @@ class Extract {
         }
 	}
 	
-	
-
-
-	/**
-	 * 파일에 있는 리스트에 해당하는 버그아이디들을 출력 패스로 출력.
-	 * 
-	 */
-	public void makeXML(String[] idList, String _outputPath)
-	{
-		String path=null;
-		File file = null;
-		
-		//타겟 디렉토리 생성
-		file = new File(_outputPath);
-		if(file.exists()==false)
-		{
-			if(file.mkdirs()==false)
-			{
-				System.out.println("Create Error");
-				return;
-			}
-		}
-		
-		
-		//리스트 순회
-		for(int i=0; i<idList.length; i++)
-		{
-			path = TextUtil.convertURLtoPath(URL_page.replaceFirst("\\{0\\}", idList[i]));
-			path = LocalProxyPath+ path;
-
-			//파일 존재 확인 및 복사
-			file = new File(path);
-			if(file.exists()==true)
-			{
-				fileCopy(path, _outputPath + i +".xml");
-				log.info("["+(i+1)+"/"+idList.length+"] Success.("+idList[i]+"): "+ path);
-			}
-			else{
-				log.error("["+(i+1)+"/"+idList.length+"] No file.("+idList[i]+"): "+ path);
-			}
-
-		}
-
-	}
-
-
 	
 	/////////////////////////////////////////////////////////////////////////////
 	// 유틸 함수들.

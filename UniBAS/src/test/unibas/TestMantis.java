@@ -7,10 +7,9 @@ import java.util.Map;
 import org.seal.UniBAS.Mantis.Model.BugReport;
 import org.seal.UniBAS.Mantis.MantisException;
 import org.seal.UniBAS.Mantis.MantisParser;
-import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.Settings;
 import org.seal.UniBAS.Util.log;
 import org.seal.UniBAS.Core.Network.WebCacheFile;
-import org.seal.UniBAS.Core.Network.WebFile;
 
 
 public class TestMantis {
@@ -38,7 +37,7 @@ public class TestMantis {
 	/**
 	 * 기본적인 베이스 변수들 선언.
 	 */
-	private Config config = null;
+	private Settings config = null;
 	private MantisParser Parser = null;
 	private WebCacheFile Web = null;
 
@@ -51,15 +50,15 @@ public class TestMantis {
 	private void SetConfig()
 	{
 		//기본 config생성.
-		config = Config.getInstance();
-		config.NAME = "TestMantis_Site";
-		config.BASE_URL = "http://bugs.scribus.net/";
+		config = Settings.getInstance();
+		config.SYS_NAME = "TestMantis_Site";
+		config.SYS_URL = "http://bugs.scribus.net/";
 		//config.BASE_URL = "https://mantis.phplist.com/";
 		//config.BASE_URL = "http://www.mantisbt.org/bugs/";
 		//config.BASE_URL = "http://mantis.doering-thomas.de/";
 		//config.BASE_URL = "http://mantis.pikatech.com/";
-		config.USER_ID = "forglee";
-		config.USER_PW = "Sel535447";
+		config.SYS_ID = "forglee";
+		config.SYS_PW = "Sel535447";
 	}
 	
 	/**
@@ -174,7 +173,7 @@ public class TestMantis {
 
 		
 		try {
-			log.init(config.LOG_PATH + "log_"+config.NAME+".txt");
+			log.init(config.LOG_PATH + "log_"+config.SYS_NAME+".txt");
 		} catch (IOException e){ 
 			log.printStackTrace(e);
 			return false;
@@ -203,16 +202,16 @@ public class TestMantis {
 		//로그인
 		boolean ret =  login();
 		if(ret==false){
-			log.error("Failed to login : \""+ config.USER_ID + "\".");
+			log.error("Failed to login : \""+ config.SYS_ID + "\".");
 			return false;
 		}
-		log.info( config.USER_ID + " signed in");
+		log.info( config.SYS_ID + " signed in");
 		
 		
 		//타임존 변경 (UTC)
 		ret =  setTimezone(null);
 		if(ret==false){
-			log.error("Failed to change timezone : \""+ config.USER_ID + "\".");
+			log.error("Failed to change timezone : \""+ config.SYS_ID + "\".");
 			return false;
 		}
 		log.info( "Changed timezone to UTC");	
@@ -227,7 +226,7 @@ public class TestMantis {
 	private boolean setTimezone(Object object) {
 		
 		String strHttp;
-		String url = config.BASE_URL + "account_prefs_page.php";
+		String url = config.SYS_URL + "account_prefs_page.php";
 		//환경설정을 읽어오기 위해 웹페이지를 가져옴.
 		strHttp = Web.getBody(url);	//새로 다운로드 필수.
 		if(strHttp==null){
@@ -259,7 +258,7 @@ public class TestMantis {
 	private String getReportURL(int _id)
 	{
 		String reportURL = "view.php?id={0}";
-		return config.BASE_URL + reportURL.replaceFirst("\\{0\\}", Integer.toString(_id));
+		return config.SYS_URL + reportURL.replaceFirst("\\{0\\}", Integer.toString(_id));
 	}
 
 	/**
@@ -328,8 +327,8 @@ public class TestMantis {
 	 */
 	public boolean login()
 	{
-		String url = config.BASE_URL + "login.php";
-		Map<String, String> params = this.getLoginParam(config.USER_ID, config.USER_PW);
+		String url = config.SYS_URL + "login.php";
+		Map<String, String> params = this.getLoginParam(config.SYS_ID, config.SYS_PW);
 		
 		//로그인 결과 페이지 다운로드.
 		String strHttp = Web.getBody(url, params);
