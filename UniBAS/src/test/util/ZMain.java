@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URLEncoder;
-import org.sel.UnifiedBTS.Core.Network.WebCacheFile;
-import org.sel.UnifiedBTS.Util.log;
+import org.seal.UniBAS.Core.Network.WebCacheFile;
+import org.seal.UniBAS.Util.log;
 
 
 public class ZMain {

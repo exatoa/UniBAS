@@ -28,17 +28,16 @@ import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTimeZone;
-import org.sel.UnifiedBTS.Bugzilla.BugzillaParser;
-import org.sel.UnifiedBTS.Bugzilla.Model.BugReport;
-import org.sel.UnifiedBTS.Core.Network.ContentTypeExtended;
-import org.sel.UnifiedBTS.Core.Network.WebCacheFile;
-import org.sel.UnifiedBTS.Start.SampleHTTPS;
-import org.sel.UnifiedBTS.Util.DateUtil;
-import org.sel.UnifiedBTS.Util.SerializedList;
-import org.sel.UnifiedBTS.Util.TextUtil;
-import org.sel.UnifiedBTS.Util.XML;
-import org.sel.UnifiedBTS.Util.TermElement;
-import org.sel.UnifiedBTS.Util.log;
+import org.seal.UniBAS.Bugzilla.BugzillaParser;
+import org.seal.UniBAS.Bugzilla.Model.BugReport;
+import org.seal.UniBAS.Core.Network.ContentTypeExtended;
+import org.seal.UniBAS.Core.Network.WebCacheFile;
+import org.seal.UniBAS.Util.DateUtil;
+import org.seal.UniBAS.Util.SerializedList;
+import org.seal.UniBAS.Util.TextUtil;
+import org.seal.UniBAS.Util.XML;
+import org.seal.UniBAS.Util.TermElement;
+import org.seal.UniBAS.Util.log;
 
 public class Test {
 

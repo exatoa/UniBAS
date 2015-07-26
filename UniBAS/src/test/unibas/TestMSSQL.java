@@ -11,15 +11,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import org.sel.UnifiedBTS.Bugzilla.BugzillaWorker;
-import org.sel.UnifiedBTS.Core.Controller;
-import org.sel.UnifiedBTS.Core.Database.DBManager;
-import org.sel.UnifiedBTS.Core.Network.WebCacheFile;
-import org.sel.UnifiedBTS.Mantis.MantisWorker;
-import org.sel.UnifiedBTS.Util.Config;
-import org.sel.UnifiedBTS.Util.DateUtil;
-import org.sel.UnifiedBTS.Util.TextUtil;
-import org.sel.UnifiedBTS.Util.log;
+import org.seal.UniBAS.Bugzilla.BugzillaWorker;
+import org.seal.UniBAS.Core.Controller;
+import org.seal.UniBAS.Core.Database.DBManager;
+import org.seal.UniBAS.Core.Network.WebCacheFile;
+import org.seal.UniBAS.Mantis.MantisWorker;
+import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.DateUtil;
+import org.seal.UniBAS.Util.TextUtil;
+import org.seal.UniBAS.Util.log;
 
 public class TestMSSQL {
 	

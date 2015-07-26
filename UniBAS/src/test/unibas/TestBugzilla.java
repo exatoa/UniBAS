@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sel.UnifiedBTS.Bugzilla.BugzillaParser;
-import org.sel.UnifiedBTS.Bugzilla.Model.BugReport;
-import org.sel.UnifiedBTS.Core.Network.WebCacheFile;
-import org.sel.UnifiedBTS.Core.Network.WebFile;
-import org.sel.UnifiedBTS.Mantis.MantisParser;
-import org.sel.UnifiedBTS.Util.Config;
-import org.sel.UnifiedBTS.Util.TextUtil;
-import org.sel.UnifiedBTS.Util.log;
+import org.seal.UniBAS.Bugzilla.BugzillaParser;
+import org.seal.UniBAS.Bugzilla.Model.BugReport;
+import org.seal.UniBAS.Core.Network.WebCacheFile;
+import org.seal.UniBAS.Core.Network.WebFile;
+import org.seal.UniBAS.Mantis.MantisParser;
+import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.TextUtil;
+import org.seal.UniBAS.Util.log;
 
 public class TestBugzilla {
 	/**

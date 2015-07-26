@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sel.UnifiedBTS.Mantis.Model.BugReport;
-import org.sel.UnifiedBTS.Mantis.MantisException;
-import org.sel.UnifiedBTS.Mantis.MantisParser;
-import org.sel.UnifiedBTS.Util.Config;
-import org.sel.UnifiedBTS.Util.log;
-import org.sel.UnifiedBTS.Core.Network.WebCacheFile;
-import org.sel.UnifiedBTS.Core.Network.WebFile;
+import org.seal.UniBAS.Mantis.Model.BugReport;
+import org.seal.UniBAS.Mantis.MantisException;
+import org.seal.UniBAS.Mantis.MantisParser;
+import org.seal.UniBAS.Util.Config;
+import org.seal.UniBAS.Util.log;
+import org.seal.UniBAS.Core.Network.WebCacheFile;
+import org.seal.UniBAS.Core.Network.WebFile;
 
 
 public class TestMantis {

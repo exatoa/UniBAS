@@ -14,12 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import org.sel.UnifiedBTS.Util.ProcessLauncher;
-import org.sel.UnifiedBTS.Util.ProcessLauncher.OutputListener;
-import org.sel.UnifiedBTS.Util.TextUtil;
-import org.sel.UnifiedBTS.Util.XML;
-import org.sel.UnifiedBTS.Util.TermElement;
-import org.sel.UnifiedBTS.Util.log;
+import org.seal.UniBAS.Util.ProcessLauncher;
+import org.seal.UniBAS.Util.ProcessLauncher.OutputListener;
+import org.seal.UniBAS.Util.TextUtil;
+import org.seal.UniBAS.Util.XML;
+import org.seal.UniBAS.Util.TermElement;
+import org.seal.UniBAS.Util.log;
 
 public class Test2 {
 
