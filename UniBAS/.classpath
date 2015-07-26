@@ -10,5 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jSoup"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/INI4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hjson"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
