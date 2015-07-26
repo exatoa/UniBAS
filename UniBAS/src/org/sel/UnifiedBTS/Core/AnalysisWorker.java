@@ -100,26 +100,44 @@ public class AnalysisWorker {
 		
 			//6. 필드 정보 매핑
 			//초기 매핑정보 생성.
+//			String xml_str = "";
+//			xml_str += "<Map>";
+//			xml_str += "<E type=\"severity\"	old=\"trivial\"		new=\"minor\"		/>";
+//			xml_str += "<E type=\"severity\"	old=\"major\"		new=\"normal\"	/>";
+//			xml_str += "<E type=\"priority\"	old=\"P2\"			new=\"P1\"			/>";
+//			xml_str += "<E type=\"priority\"	old=\"P4\"			new=\"P5\"			/>";
+//			xml_str += "<E type=\"resolution\"	old=\"EXPIRED\"		new=\"FIXED\"		/>";
+//			xml_str += "<E type=\"resolution\"	old=\"MOVED\"		new=\"FIXED\"	/>";
+//			xml_str += "<E type=\"resolution\"	old=\"INVALID\"		new=\"INCOMPLETE\"	/>";
+//			xml_str += "<E type=\"resolution\"	old=\"WONTFIX\"		new=\"FIXED\"		/>";
+//			xml_str += "<E type=\"resolution\"	old=\"WORKSFORME\"	new=\"INCOMPLETE\"	/>";
+//			xml_str += "<E type=\"status\"		old=\"ASSIGNED\"	new=\"OPEN\"	/>";
+//			xml_str += "<E type=\"status\"		old=\"CLOSED\"		new=\"CLOSED\"		/>";
+//			xml_str += "<E type=\"status\"		old=\"NEW\"			new=\"OPEN\"		/>";
+//			xml_str += "<E type=\"status\"		old=\"REOPENED\"	new=\"OPEN\"	/>";
+//			xml_str += "<E type=\"status\"		old=\"RESOLVED\"	new=\"CLOSED\"	/>";
+//			xml_str += "<E type=\"status\"		old=\"UNCONFIRMED\"	new=\"OPEN\"		/>";
+//			xml_str += "<E type=\"status\"		old=\"VERIFIED\"	new=\"CLOSED\"	/>";
+//			xml_str += "</Map>";
 			String xml_str = "";
 			xml_str += "<Map>";
-			xml_str += "<E type=\"severity\"	old=\"trivial\"		new=\"minor\"		/>";
-			xml_str += "<E type=\"severity\"	old=\"major\"		new=\"normal\"	/>";
-			xml_str += "<E type=\"priority\"	old=\"P2\"			new=\"P1\"			/>";
-			xml_str += "<E type=\"priority\"	old=\"P4\"			new=\"P5\"			/>";
-			xml_str += "<E type=\"resolution\"	old=\"EXPIRED\"		new=\"FIXED\"		/>";
-			xml_str += "<E type=\"resolution\"	old=\"MOVED\"		new=\"FIXED\"	/>";
-			xml_str += "<E type=\"resolution\"	old=\"INVALID\"		new=\"INCOMPLETE\"	/>";
-			xml_str += "<E type=\"resolution\"	old=\"WONTFIX\"		new=\"FIXED\"		/>";
-			xml_str += "<E type=\"resolution\"	old=\"WORKSFORME\"	new=\"INCOMPLETE\"	/>";
-			xml_str += "<E type=\"status\"		old=\"ASSIGNED\"	new=\"OPEN\"	/>";
+			xml_str += "<E type=\"severity\"	old=\"trivial\"		new=\"trivial\"		/>";
+			xml_str += "<E type=\"severity\"	old=\"major\"		new=\"major\"	/>";
+			xml_str += "<E type=\"priority\"	old=\"P2\"			new=\"P2\"			/>";
+			xml_str += "<E type=\"priority\"	old=\"P4\"			new=\"P4\"			/>";
+			xml_str += "<E type=\"resolution\"	old=\"EXPIRED\"		new=\"EXPIRED\"		/>";
+			xml_str += "<E type=\"resolution\"	old=\"MOVED\"		new=\"MOVED\"	/>";
+			xml_str += "<E type=\"resolution\"	old=\"INVALID\"		new=\"INVALID\"	/>";
+			xml_str += "<E type=\"resolution\"	old=\"WONTFIX\"		new=\"WONTFIX\"		/>";
+			xml_str += "<E type=\"resolution\"	old=\"WORKSFORME\"	new=\"WORKSFORME\"	/>";
+			xml_str += "<E type=\"status\"		old=\"ASSIGNED\"	new=\"ASSIGNED\"	/>";
 			xml_str += "<E type=\"status\"		old=\"CLOSED\"		new=\"CLOSED\"		/>";
-			xml_str += "<E type=\"status\"		old=\"NEW\"			new=\"OPEN\"		/>";
-			xml_str += "<E type=\"status\"		old=\"REOPENED\"	new=\"OPEN\"	/>";
-			xml_str += "<E type=\"status\"		old=\"RESOLVED\"	new=\"CLOSED\"	/>";
-			xml_str += "<E type=\"status\"		old=\"UNCONFIRMED\"	new=\"OPEN\"		/>";
-			xml_str += "<E type=\"status\"		old=\"VERIFIED\"	new=\"CLOSED\"	/>";
+			xml_str += "<E type=\"status\"		old=\"NEW\"			new=\"NEW\"		/>";
+			xml_str += "<E type=\"status\"		old=\"REOPENED\"	new=\"REOPENED\"	/>";
+			xml_str += "<E type=\"status\"		old=\"RESOLVED\"	new=\"RESOLVED\"	/>";
+			xml_str += "<E type=\"status\"		old=\"UNCONFIRMED\"	new=\"UNCONFIRMED\"		/>";
+			xml_str += "<E type=\"status\"		old=\"VERIFIED\"	new=\"VERIFIED\"	/>";
 			xml_str += "</Map>";
-			
 			
 			//데이터 베이스 변경
 			DB.changeDB(Setting.NAME);
