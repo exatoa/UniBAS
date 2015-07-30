@@ -1,6 +1,6 @@
 package org.seal.UniBAS.Util;
 
-	import java.io.*;
+import java.io.*;
 
 /**
 * Simple utilities to return the stack trace of an

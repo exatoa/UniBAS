@@ -8,16 +8,16 @@
 		 DB_TYPE:"MSSQL"			#DBMS type (MSSQL, MYSQL)
 		,DB_ADDR:"zeus.sigse.org"	#DB address
 		,DB_PORT:1433				#DB port
-		,DB_ID:"BugManager"		#DB login id
-		,DB_PW:"smartBug@1"		#DB login password
+		,DB_ID:"BugManager"			#DB login id
+		,DB_PW:"smartBug@1"			#DB login password
 		,DB_BASEDB:"UniBAS"			#DB Database name for management
 		,DB_PREFIX:"Bug" 			#prefix for original site database -->
 		
-		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\_temp\\"	# log path		
+		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\.logs\\"	# log path		
 		
 		# cache repository control
 		,CACHE_PATH:"E:\\_Research\\2014_UniBAS\\_cache\\"	# cache path
-		,CACHE_LEVEL:2			#cache directory depth
+		,CACHE_LEVEL:2				#cache directory depth
 		,CACHE_NAMESIZE:2			#cache directory name size
 	},
 	
@@ -41,16 +41,16 @@
 	# Settings to extract original source files
 	ANALYSIS:{
 		# Analysis name, it uses also as schema name, don't input space
-		 AS_NAME:"Analysis_Motivation"	
-		,AS_DESC:""		#description
+		 AS_NAME:"Analysis_FirefoxB"	
+		,AS_DESC:""							#description
 		
 		# Filter information
-		,SITE_ID:7			# Site IDentify to analyze
-		,PROJECT_ID:"16"	# Project ID to analyze, it can be multiful.
-		,IS_UNIFORMLY:1	# what kind of an option?
+		,SITE_ID:7			# Site IDentify to analyze, integer
+		,PROJECT_ID:"16"	# Project IDs to analyze, it can be multiful, string
+		,IS_UNIFORMLY:1		# what kind of an option?
 		,START_DATE:"2013-07-01"
-		,END_DATE:"2013-08-01"		# 실제 필터할 날짜보다 하루 다음날을 입력해야 함
-		,CONDITION:""					#추가로 원하는 조건, SQL WHERE Clause과 같음		
+		,END_DATE:"2013-07-31"		# 지정한 날짜까지의 데이터를 선택
+		,CONDITION:""				# 추가로 원하는 조건, SQL WHERE Clause과 같음		
 	},
 
 	
@@ -71,4 +71,14 @@
 		
 		# LocalProxyPath is defined CACHE_PATH of COMMON
 	}
+	
+	#plug-ins
+	PLUGINS:[
+		#플러그인의 목록이 나열 됩니다.
+		#NAME:{properties}
+		NLP:{
+			CMD:"python D:\\#NLC\\Projects\\PyCharm\\UniBAS\\Main.py"
+			ARGUMENTS:"-d Setting.AS_NAME -s 7 -m 1 -w \""b s\"""	#이름 정하는 부분이 ...음..변수가 들어가네...
+		}
+	]
 }

@@ -49,7 +49,7 @@
 		,PROJECT_ID:"16"	# Project ID to analyze, it can be multiful.
 		,IS_UNIFORMLY:1	# what kind of an option?
 		,START_DATE:"2013-07-01"
-		,END_DATE:"2013-08-01"		# 실제 필터할 날짜보다 하루 다음날을 입력해야 함
+		,END_DATE:"2013-07-31"		    # 실제 필터할 날짜보다 하루 다음날을 입력해야 함
 		,CONDITION:""					#추가로 원하는 조건, SQL WHERE Clause과 같음		
 	},
 
