@@ -74,7 +74,8 @@ public class BugzillaWorker extends Controller{
 		//2. 상태 셋팅=======================================================		
 		try{
 			log.info( "Login and Setting ......");
-			if(this.WorkProcessLogin()==false) return false;
+			//if(this.WorkProcessLogin()==false) return false;
+			log.info("Login pass!!!!!!");
 			log.info( "Login and Setting                    ... Done.");
 			
 			if(restartOption==false)

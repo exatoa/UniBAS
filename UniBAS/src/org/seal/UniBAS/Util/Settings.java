@@ -93,14 +93,14 @@ public class Settings {
 	public String DB_PORT = "1433";
 	public String DB_ID = "BugManager";
 	public String DB_PW = "smartBug@1";
-	public String DB_BASEDB = "UniBAS";
+	public String DB_BASEDB = "UniBAS2";
 	public String DB_PREFIX = "Bug";
 
 	public int CACHE_LEVEL = 2;		//캐쉬 디렉토리 깊이
 	public int CACHE_NAMESIZE = 2;	//캐쉬 디렉토리 이름길이.
 	public String CACHE_PATH = "E:\\_Research\\2014_UniBAS\\_cache\\";
 	
-	public String LOG_PATH = "E:\\_Research\\2014_UniBAS\\_temp\\";
+	public String LOG_PATH = "E:\\_Research\\2014_UniBAS\\.logs\\";
 	
 	
 	//[Crawling]

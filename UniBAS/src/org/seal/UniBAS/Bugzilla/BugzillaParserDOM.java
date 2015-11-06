@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.jsoup.nodes.Entities;
 import org.seal.UniBAS.Bugzilla.Model.Attachment;
 import org.seal.UniBAS.Bugzilla.Model.BugHistory;
 import org.seal.UniBAS.Bugzilla.Model.BugReport;
@@ -26,14 +28,18 @@ import org.seal.UniBAS.Bugzilla.Model.User;
 import org.seal.UniBAS.Bugzilla.Model.Vote;
 import org.seal.UniBAS.Util.DateUtil;
 import org.seal.UniBAS.Util.log;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-public class BugzillaParser 
+
+
+
+public class BugzillaParserDOM 
 {
 	
 	public String RegexEmail = "^.*@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+)+";//"^([0-9a-zA-Z_.+\\-]+)@([0-9a-zA-Z_-]+)(\\.[.0-9a-zA-Z_-]+)"; 
-	public BugzillaParser()
+	public BugzillaParserDOM()
 	{
 		
 	}
@@ -154,273 +160,9 @@ public class BugzillaParser
 	
 	
 	
-
+		
 	/**
-	 * 버그리포트 분석 (javax DOM Parser 활용)
-	 * @param _xml
-	 * @param _user
-	 * @return
-	 */
-	public BugReport analysisReportWithDOM(String _xml, String _user)
-	{		
-		//DOM 얻기
-		DOMParser parser = DOMParser.getInstance();
-		org.w3c.dom.Document doc = parser.parseXML(_xml);
-		
-		//버그질라 정보확인
-		NodeList bugzillas = doc.getElementsByTagName("bugzilla");
-		if(bugzillas.getLength() !=1) return null;
-		
-		//로그인계정확인.
-		org.w3c.dom.Element bugzilla = (org.w3c.dom.Element)bugzillas.item(0);
-		String loginname = bugzilla.getAttribute("exporter");
-		if (loginname==null || loginname.compareTo(_user)!=0) return null;
-		
-		//정보추출.
-		NodeList bugs = bugzilla.getElementsByTagName("bug");
-		if (bugs.getLength()==0) return null;
-		
-		org.w3c.dom.Element bug = (org.w3c.dom.Element)bugs.item(0);
-		
-		
-		BugReport report = getBasicInfo(bug);
-		fillAuthorsInfo(report, bug);
-		fillOptionalInfo(report, bug);
-		fillListInfo(report, bug);
-		
-		return report;
-	}
-	
-	/**
-	 * 버그리포트의 기본값을 추출  (analysisReportWithDOM sub function)
-	 * @param _bug
-	 * @return
-	 */
-	public BugReport getBasicInfo(org.w3c.dom.Element _bug)
-	{
-		BugReport report = new BugReport();
-		report.BugID = Integer.parseInt(_bug.getElementsByTagName("bug_id").item(0).getTextContent());
-		
-		report.Status = _bug.getElementsByTagName("bug_status").item(0).getTextContent();
-		report.Resolution = _bug.getElementsByTagName("resolution").item(0).getTextContent();
-		
-		
-		report.Classification = new PropertyItem();
-		report.Classification.ID = Integer.parseInt(_bug.getElementsByTagName("classification_id").item(0).getTextContent());
-		report.Classification.Name = _bug.getElementsByTagName("classification").item(0).getTextContent();
-		
-		report.Product = new Product();
-		report.Product.Name = _bug.getElementsByTagName("product").item(0).getTextContent();
-		
-		report.Component = new PropertyItem();
-		report.Component.Name = _bug.getElementsByTagName("component").item(0).getTextContent();
-		//report.Component.Product = report.Product;
-		
-		report.Version = _bug.getElementsByTagName("version").item(0).getTextContent();
-		report.Priority = _bug.getElementsByTagName("priority").item(0).getTextContent();
-		report.Severity = _bug.getElementsByTagName("bug_severity").item(0).getTextContent();
-		report.Milestone = _bug.getElementsByTagName("target_milestone").item(0).getTextContent();
-		report.Platform = _bug.getElementsByTagName("rep_platform").item(0).getTextContent();
-		report.OS = _bug.getElementsByTagName("op_sys").item(0).getTextContent();
-		
-		report.Summary = _bug.getElementsByTagName("short_desc").item(0).getTextContent();
-		report.StatusWhiteboard = _bug.getElementsByTagName("status_whiteboard").item(0).getTextContent();
-		report.Tags = _bug.getElementsByTagName("keywords").item(0).getTextContent();		
-		report.Votes = Integer.parseInt(_bug.getElementsByTagName("votes").item(0).getTextContent());
-		
-		report.UpdatedTime = DateUtil.getUTCString(_bug.getElementsByTagName("delta_ts").item(0).getTextContent(), false);
-		report.CreationTime = DateUtil.getUTCString(_bug.getElementsByTagName("creation_ts").item(0).getTextContent(), false);
-		
-		report.BugFileLoc = _bug.getElementsByTagName("bug_file_loc").item(0).getTextContent();
-		report.Everconfirmed = Integer.parseInt(_bug.getElementsByTagName("everconfirmed").item(0).getTextContent());
-		report.ReporterAccessible = Integer.parseInt(_bug.getElementsByTagName("reporter_accessible").item(0).getTextContent());
-		report.CClistAccessible = Integer.parseInt(_bug.getElementsByTagName("cclist_accessible").item(0).getTextContent());
-		
-		return report;
-	}
-	
-
-	/**
-	 * 사용자 ID에 관한 정보들 추가 수집  (analysisReportWithDOM sub function)
-	 * @param _report
-	 * @param _bug
-	 */
-	public void fillAuthorsInfo(BugReport _report, org.w3c.dom.Element _bug)
-	{
-		
-		org.w3c.dom.Element item = null;
-		NodeList e = _bug.getElementsByTagName("reporter");
-		if(e.getLength()!=0){
-			item = (org.w3c.dom.Element)e.item(0);
-			_report.Reporter = new User();
-			_report.Reporter.ID = -1;
-			_report.Reporter.LoginName = item.getTextContent();
-			_report.Reporter.RealName = item.getAttribute("name");
-			_report.Reporter.Timezone = DateUtil.getTimezoneString(_bug.getElementsByTagName("creation_ts").item(0).getTextContent(), false);
-		}
-		
-		e = _bug.getElementsByTagName("assigned_to");
-		if(e.getLength()!=0){
-			item = (org.w3c.dom.Element)e.item(0);
-			_report.Assignee = new User();
-			_report.Assignee.ID = -1;
-			_report.Assignee.LoginName = item.getTextContent();
-			_report.Assignee.RealName = item.getAttribute("name"); 
-		}
-		
-		e = _bug.getElementsByTagName("qa_contact");
-		if(e.getLength()!=0){
-			item = (org.w3c.dom.Element)e.item(0);
-			_report.QA = new User();
-			_report.QA.ID = -1;
-			_report.QA.LoginName = item.getTextContent();
-			_report.QA.RealName = item.getAttribute("name");
-		}
-	}
-	
-	
-	
-	/**
-	 * 선택적 정보 추가  (analysisReportWithDOM sub function)
-	 * @param _report
-	 * @param _bug
-	 */
-	public void fillOptionalInfo(BugReport _report, org.w3c.dom.Element _bug)
-	{
-		//optional값들 처리.		
-		NodeList e = _bug.getElementsByTagName("lastdiffed");
-		if(e.getLength()!=0){
-			_report.Lastdiffed = DateUtil.getUTCString(e.item(0).getTextContent(), false);
-		}
-		
-		e = _bug.getElementsByTagName("deadline");
-		if(e.getLength()!=0){
-			_report.Deadline = e.item(0).getTextContent();
-		}
-
-		e = _bug.getElementsByTagName("remaining_time");
-		if(e.getLength()!=0){
-			_report.RemainingTime = Double.parseDouble(e.item(0).getTextContent());
-		}
-		
-		e = _bug.getElementsByTagName("estimated_time");
-		if(e.getLength()!=0){
-			_report.EstimatedTime = Double.parseDouble(e.item(0).getTextContent());
-		}
-		
-		e = _bug.getElementsByTagName("actual_time");
-		if(e.getLength()!=0){
-			_report.ActualTime = Double.parseDouble(e.item(0).getTextContent());
-		}
-	}
-	
-	
-	/**
-	 * 리스트 정보들의 추가(comment, attachement, ...)
-	 *   (analysisReportWithDOM sub function)
-	 * @param _report
-	 * @param _bug
-	 */
-	public void fillListInfo(BugReport _report, org.w3c.dom.Element _bug)
-	{
-		//CC는 리스트 처리
-		NodeList list  = _bug.getElementsByTagName("cc");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-			User user = new User(-1, item.getTextContent());
-			_report.CCList.add(user);
-		}
-			
-		
-		//SeeAlso는 리스트 처리
-		list  = _bug.getElementsByTagName("see_also");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-			_report.SeeAlsos.add(item.getTextContent());
-		}
-		
-	
-		//comments
-		list  = _bug.getElementsByTagName("long_desc");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-			
-			//submitter info
-			org.w3c.dom.Element who = (org.w3c.dom.Element)item.getElementsByTagName("who").item(0);
-			User submitter = new User();			
-			submitter.LoginName = who.getTextContent();
-			submitter.RealName = who.getAttribute("name"); 
-			
-			//comment info
-			Bugnote note = new Bugnote();
-			note.ID = Integer.parseInt(item.getElementsByTagName("commentid").item(0).getTextContent());
-			note.Submitter = submitter;
-			note.CreationTime = DateUtil.getUTCString(item.getElementsByTagName("bug_when").item(0).getTextContent(), false);
-			note.TheText = item.getElementsByTagName("thetext").item(0).getTextContent();
-			note.isPrivate = Integer.parseInt(item.getAttribute("isprivate"));
-
-			//attached id 정보가 있을경우 추출.
-			NodeList attchedid = item.getElementsByTagName("attachid"); 
-			if(attchedid.getLength()!=0)
-				note.AttachID = Integer.parseInt(attchedid.item(0).getTextContent());
-			else
-				note.AttachID = -1;
-			_report.Bugnotes.add(note);
-		} 
-	    
-		//Duplication
-		list  = _bug.getElementsByTagName("dup_id");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);		
-			
-			_report.Relationships.add(new Relationship(_report.BugID, Integer.parseInt(item.getTextContent()), RelationshipType.DuplicateOf));
-		}
-		
-		//Dependencies
-		list  = _bug.getElementsByTagName("dependson");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-		
-			_report.Relationships.add(new Relationship(_report.BugID, Integer.parseInt(item.getTextContent()), RelationshipType.ChildOf));
-		} 
-		
-		//Blocks
-		list  = _bug.getElementsByTagName("blocked");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-			
-			_report.Relationships.add(new Relationship(_report.BugID, Integer.parseInt(item.getTextContent()), RelationshipType.ParentOf));
-			//report.Blocks.add(Integer.parseInt(item.text()));
-		} 
-		
-		//Attachment는 리스트 처리
-		list  = _bug.getElementsByTagName("attachment");
-		for(int i=0; i<list.getLength(); i++){
-			org.w3c.dom.Element item = (org.w3c.dom.Element)list.item(i);
-
-			Attachment attach = new Attachment();
-			attach.ID = Integer.parseInt(item.getElementsByTagName("attachid").item(0).getTextContent());
-			attach.CreationTime = DateUtil.getUTCString(item.getElementsByTagName("date").item(0).getTextContent(), false);
-			attach.Desc = item.getElementsByTagName("desc").item(0).getTextContent();
-			attach.Filename = item.getElementsByTagName("filename").item(0).getTextContent();
-			attach.isObsolete = Integer.parseInt(item.getAttribute("isobsolete"));
-			attach.isPatch = Integer.parseInt(item.getAttribute("ispatch"));
-			attach.isPrivate = Integer.parseInt(item.getAttribute("isprivate"));
-			attach.isUrl = 0;
-			attach.MimeType = item.getElementsByTagName("type").item(0).getTextContent();
-			attach.ModificationTime = DateUtil.getUTCString(item.getElementsByTagName("delta_ts").item(0).getTextContent(), false);
-			attach.Attacher.LoginName = item.getElementsByTagName("attacher").item(0).getTextContent();
-			attach.MimeType = item.getElementsByTagName("type").item(0).getTextContent();
-			attach.Data = item.getElementsByTagName("data").item(0).getTextContent();
-			attach.FileSize = Integer.parseInt(item.getElementsByTagName("size").item(0).getTextContent());
-					
-			_report.Attachments.add(attach);
-		}
-	}
-
-	
-	/**
-	 * JSuop을 이용한 버그리포트 파싱.
+	 * 버그리포트 분석
 	 * @param _xml
 	 * @param _user
 	 * @return
@@ -429,7 +171,7 @@ public class BugzillaParser
 	{		
 		Elements e;
 		BugReport report;
-		Document doc = Jsoup.parse(_xml, "UTF-8", Parser.xmlParser());
+		Document doc = Jsoup.parse(_xml, "", Parser.xmlParser());
 		
 		//버그질라 정보확인
 		Elements root = doc.select("bugzilla");
@@ -547,18 +289,15 @@ public class BugzillaParser
 		for(Element item : doc.select("bug>see_also")){
 			report.SeeAlsos.add(item.text());
 		}
-
+		
+	
 		//comments
-		// \n문자가 잘 인식되지 않아서 꼼수를 사용.
-		String escape = "\\1n";	// Escape character
-		String xml_comments = _xml.replace("\n", escape);
-		Document comments_doc = Jsoup.parse(xml_comments , "UTF-8", Parser.xmlParser());
-		for(Element item : comments_doc.select("bug>long_desc")){
+		for(Element item : doc.select("bug>long_desc")){
 			Bugnote note = new Bugnote();
 			note.ID = Integer.parseInt(item.select("commentid").get(0).text());
 			note.Submitter = new User(-1, item.select("who").get(0).text(), item.select("who").get(0).attr("name"));
 			note.CreationTime = DateUtil.getUTCString(item.select("bug_when").get(0).text(), false);
-			note.TheText = item.select("thetext").get(0).text().replace(escape, "\n");
+			note.TheText = item.select("thetext").get(0).text();
 			note.isPrivate = Integer.parseInt(item.attr("isprivate"));
 
 			e =item.select("attachid"); 
@@ -1024,6 +763,7 @@ public class BugzillaParser
 		
 		return ret;
 	}
+	
 	
 	public Map<String, String> getLoginParams(String _html, String _userID, String _userPW) 
 	{

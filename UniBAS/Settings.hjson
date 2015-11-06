@@ -10,7 +10,7 @@
 		,DB_PORT:1433				#DB port
 		,DB_ID:"BugManager"			#DB login id
 		,DB_PW:"smartBug@1"			#DB login password
-		,DB_BASEDB:"UniBAS"			#DB Database name for management
+		,DB_BASEDB:"UniBAS2015"     #DB Database name for management
 		,DB_PREFIX:"Bug" 			#prefix for original site database -->
 		
 		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\.logs\\"	# log path		
@@ -25,12 +25,12 @@
 	CRAWLING:{
 	
 		# Target site information(name, description, system type)
-		 SYS_NAME:"Mozilla"
+		 SYS_NAME:"Mozilla20151107"
 		,SYS_TYPE:"Bugzilla"
 		,SYS_DESC:""
-		,SYS_URL:"http://bugzilla.mozilla.org/"  # Address
+		,SYS_URL:"https://bugzilla.mozilla.org/"  # Address
 		,SYS_ID:"forglee@naver.com"
-		,SYS_PW:"Sel535447"
+		,SYS_PW:"Sel535424"
 
 		#crawling speed control		
 		,LIMIT_COUNT:1000		# 연속 다운로드 수 1000
@@ -54,7 +54,7 @@
 	},
 
 	
-	# Settings to extract original source files 
+	# Settings to extract original source files (cache파일을 외부로 추출할때 이용)
 	EXTRACT:{
 		
 		#input 관련 정보 

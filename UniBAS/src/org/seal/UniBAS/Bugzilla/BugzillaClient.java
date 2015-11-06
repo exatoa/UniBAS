@@ -374,6 +374,7 @@ public class BugzillaClient {
 			
 			//버그리포트 페이지 분석.
 			report = Parser.analysisReport(HttpString, ThisSite.UserID);	//페이지 결과분석
+			//report = Parser.analysisReportWithDOM(HttpString, ThisSite.UserID);	//페이지 결과분석			
 			if(report==null){
 				log.error("BugReport analysis Error : " + Url);		//오류 표시하고 다음으로 넘어감.
 				redownload = true;
