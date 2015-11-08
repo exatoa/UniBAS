@@ -62,6 +62,7 @@
 		,EX_SITE:"https://bugzilla.mozilla.org/"		# 추출할 사이트 
 		,EX_PAGE:"show_bug.cgi?id={0}&ctype=xml"		# 추출할 페이지 {0}은 변수, List의 ID가 입력됨
 		#,URL_PAGE:"show_activity.cgi?id={0}"
+		,EX_LIMIT_PAGE : 1065800						# -1이면 실행시 가장 최신의 버그리포트까지 수집
 		 
 		# output 관련 정보
 		,EX_OUTPUTPATH:"E:\\_Research\\2015_IEICE\\Extract\\bug_july\\"

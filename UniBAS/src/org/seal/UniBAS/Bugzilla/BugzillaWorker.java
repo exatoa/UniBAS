@@ -185,10 +185,13 @@ public class BugzillaWorker extends Controller{
 		
 		
 		//LastBugID구하기
-		int LastBugID = Client.getLastBugID();
-		if (LastBugID==-1) return false;
+		int LastBugID = Settings.it().EX_LIMIT_PAGE; 
+		if (LastBugID != -1){
+			LastBugID = Client.getLastBugID();
+			if (LastBugID==-1) return false;
+		}
 		
-		State.setLastBugID(LastBugID);
+		State.setLastBugID(LastBugID);	
 		log.info("Total BugReport is "+LastBugID);				
 		return true;
 	}

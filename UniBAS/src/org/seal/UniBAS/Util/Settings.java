@@ -129,6 +129,7 @@ public class Settings {
 	public String 	EX_INPUTS = "";
 	public String 	EX_SITE = "";
 	public String 	EX_PAGE = "";
+	public int 		EX_LIMIT_PAGE = -1;
 	public String 	EX_OUTPUTPATH = "";
 	public String 	EX_EXTNAME = "";
 	public int 		EX_SPLIT_CNT = 0;
@@ -176,6 +177,7 @@ public class Settings {
 		EX_INPUTS = getString("EXTRACT","EX_INPUTS");
 		EX_SITE = getString("EXTRACT","EX_SITE");
 		EX_PAGE = getString("EXTRACT","EX_PAGE");
+		EX_LIMIT_PAGE = getInt("EXTRACT","EX_LIMIT_PAGE");
 		EX_OUTPUTPATH = getString("EXTRACT","EX_OUTPUTPATH");
 		EX_EXTNAME = getString("EXTRACT","EX_EXTNAME");
 		EX_SPLIT_CNT = getInt("EXTRACT","EX_SPLIT_CNT");
@@ -227,6 +229,7 @@ public class Settings {
 		System.out.println("EX_INPUTS : " + EX_INPUTS);
 		System.out.println("EX_SITE : " + EX_SITE);
 		System.out.println("EX_PAGE : " + EX_PAGE);
+		System.out.println("EX_LIMIT_PAGE : " + EX_LIMIT_PAGE);		
 		System.out.println("EX_OUTPUTPATH : " + EX_OUTPUTPATH);
 		System.out.println("EX_EXTNAME : " + EX_EXTNAME);
 		System.out.println("EX_SPLIT_CNT : " + EX_SPLIT_CNT);
