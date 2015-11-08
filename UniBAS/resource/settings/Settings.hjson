@@ -10,10 +10,10 @@
 		,DB_PORT:1433				#DB port
 		,DB_ID:"BugManager"		#DB login id
 		,DB_PW:"smartBug@1"		#DB login password
-		,DB_BASEDB:"UniBAS"			#DB Database name for management
+		,DB_BASEDB:"UniBAS2015"			#DB Database name for management
 		,DB_PREFIX:"Bug" 			#prefix for original site database -->
 		
-		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\_temp\\"	# log path		
+		,LOG_PATH:"E:\\_Research\\2014_UniBAS\\.logs\\"	# log path		
 		
 		# cache repository control
 		,CACHE_PATH:"E:\\_Research\\2014_UniBAS\\_cache\\"	# cache path
@@ -25,12 +25,12 @@
 	CRAWLING:{
 	
 		# Target site information(name, description, system type)
-		 SYS_NAME:"Mozilla"
+		 SYS_NAME:"Mozilla20151107"
 		,SYS_TYPE:"Bugzilla"
 		,SYS_DESC:""
-		,SYS_URL:"http://bugzilla.mozilla.org/"  # Address
+		,SYS_URL:"https://bugzilla.mozilla.org/"  # Address
 		,SYS_ID:"forglee@naver.com"
-		,SYS_PW:"Sel535447"
+		,SYS_PW:"Sel535424"
 
 		#crawling speed control		
 		,LIMIT_COUNT:1000		# 연속 다운로드 수 1000
@@ -61,8 +61,8 @@
 		 EX_INPUTS:"E:\\_Research\\2015_IEICE\\Extract\\list_july.txt"	# Bug ID list
 		,EX_SITE:"https://bugzilla.mozilla.org/"		# 추출할 사이트 
 		,EX_PAGE:"show_bug.cgi?id={0}&ctype=xml"		# 추출할 페이지 {0}은 변수, List의 ID가 입력됨
-		#,URL_PAGE:"show_activity.cgi?id={0}"
-		,EX_LIMIT_PAGE : 1065800						# -1이면 실행시 가장 최신의 버그리포트까지 수집
+		,EX_LIMIT_PAGE:1065800							# -1이면 실행시 가장 최신의 버그리포트까지 수집
+		#,URL_PAGE:"show_activity.cgi?id={0}"		
 		 
 		# output 관련 정보
 		,EX_OUTPUTPATH:"E:\\_Research\\2015_IEICE\\Extract\\bug_july\\"
