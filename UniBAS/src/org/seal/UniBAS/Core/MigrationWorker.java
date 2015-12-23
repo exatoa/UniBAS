@@ -34,9 +34,10 @@ public class MigrationWorker {
 	
 			
 			//사이트 아이디 구하기
-			SiteID = Adapter.getSiteID(Setting.SYS_NAME);
+			String DBName = Setting.SYS_TYPE+ "_" + Setting.SYS_NAME;
+			SiteID = Adapter.getSiteID(DBName);
 			if(SiteID<=0){
-				log.error("잘못된 스키마명 : " + Setting.SYS_NAME);
+				log.error("잘못된 스키마명 : " + DBName);
 				return false;
 			}
 			log.info("SiteID = " + SiteID);
@@ -46,14 +47,14 @@ public class MigrationWorker {
 			log.info("removing old data in site_id=" + SiteID+"...");
 			int ret = Adapter.removeSiteData(SiteID);
 			if(ret<=0){
-				log.error("기존 스키마 데이터 삭제중 에러 : " + Setting.SYS_NAME);
+				log.error("기존 스키마 데이터 삭제중 에러 : " + DBName);
 				return false;
 			}
 			log.info("Done");
 			
 			
 			//RSM 스키마에서 작업
-			DB.changeDB(Setting.SYS_NAME);
+			DB.changeDB(DBName);
 			
 
 			//마이그레이션 도구 삭제

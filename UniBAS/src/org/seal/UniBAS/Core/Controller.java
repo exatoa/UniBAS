@@ -53,7 +53,6 @@ public abstract class Controller {
 	
 			//2. 대상 정보 저장======================================================
 			String targetDBname = Setting.SYS_TYPE +"_" +Setting.SYS_NAME;
-			//String unifiedDBname = Setting.DB_PREFIX +"_" +Setting.NAME;
 	
 			SiteInfo info = new SiteInfo(Setting.SYS_NAME, targetDBname,Setting.SYS_DESC, Setting.SYS_TYPE, Setting.SYS_URL, Setting.SYS_ID, Setting.SYS_PW,  Setting.LOG_PATH,  Setting.CACHE_PATH);
 			SiteID =common.saveSiteInfo(info);

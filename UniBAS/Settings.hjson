@@ -36,6 +36,9 @@
 		,LIMIT_COUNT:1000		# 연속 다운로드 수 1000
 		,WAIT_MINUTE:5			# 연속 다운로드 후 대기시간
 		,DOWN_SPEED:40			# 1분당 최대 다운로드 수
+		
+		# set crawling range
+		,LIMIT_PAGE:0			# -1이면 실행시 가장 최신의 버그리포트까지 수집  # 1065800
 	},
 
 	# Settings to extract original source files

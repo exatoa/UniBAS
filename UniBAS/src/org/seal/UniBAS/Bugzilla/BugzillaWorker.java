@@ -185,7 +185,7 @@ public class BugzillaWorker extends Controller{
 		
 		
 		//LastBugID구하기
-		int LastBugID = Settings.it().EX_LIMIT_PAGE; 
+		int LastBugID = Settings.it().LIMIT_PAGE; 
 		if (LastBugID != -1){
 			LastBugID = Client.getLastBugID();
 			if (LastBugID==-1) return false;

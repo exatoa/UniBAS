@@ -87,10 +87,6 @@ public class Crawler
 		//5. 조건에 맞는 컨트롤러 생성.=======================================================
 		Controller controller = null;
 		if(config.SYS_TYPE.toLowerCase().compareTo("bugzilla")==0){
-			//TODO::이건 무슨 코드지? 전처리가 pre이면....뭔가 preworker를 실행한다.?
-			if(config.DB_PREFIX.toLowerCase().compareTo("pre")==0)
-				controller= new BugzillaPreWorker(config);
-			else
 				controller= new BugzillaWorker(config);
 		}
 		else if(config.SYS_TYPE.toLowerCase().compareTo("mantis")==0)
